@@ -1,16 +1,15 @@
-<!doctype html>
-<html lang="en">
+<?php
+include_once('./inc/head.php');
 
-<?php include_once('inc/head.php'); ?>
+?>
 
 <body>
 
-
   <div class="wrap">
 
-    <!-- START header -->
+    <!-- START navbar -->
     <?php include_once('inc/header.php'); ?>
-    <!-- END header -->
+    <!-- END navbar -->
 
     <!-- START slider -->
     <?php include_once('inc/slider.php'); ?>

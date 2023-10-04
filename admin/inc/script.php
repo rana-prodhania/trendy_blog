@@ -16,3 +16,10 @@
 
 <!-- Page JS -->
 <script src="./assets/js/dashboards-analytics.js"></script>
+
+
+</body>
+
+
+
+</html>

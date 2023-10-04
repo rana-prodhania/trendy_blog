@@ -1,8 +1,11 @@
+<!doctype html>
+<html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Dashboard - Trendy Blog</title>
+    <title>Trendy Blog</title>
 
     <meta name="description" content="" />
 
@@ -28,9 +31,14 @@
     <link rel="stylesheet" href="./assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <!-- Page CSS -->
+    <link rel="stylesheet" href="./assets/vendor/css/pages/page-auth.css" />
 
     <!-- Helpers -->
     <script src="./assets/vendor/js/helpers.js"></script>
 
     <script src="./assets/js/config.js"></script>
+
+
 </head>
+
+<body>
