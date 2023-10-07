@@ -33,6 +33,14 @@ class Database
         }
         return $result->fetch_assoc();
     }
+    // Select All Data
+    public function selectAll($query){
+        $result = $this->conn->query($query);
+        if (!$result) {
+            die("Query failed: " . $this->conn->error);
+        }
+        return $result;
+    }
     // Insert data
     public function insert($query)
     {
@@ -40,7 +48,25 @@ class Database
         if (!$result) {
             die("Insertion failed: " . $this->conn->error);
         }
-        return $this->conn->insert_id;
+        return $result;
+    }
+    // Update data
+    public function update($query)
+    {
+        $result = $this->conn->query($query);
+        if (!$result) {
+            die("Update failed: " . $this->conn->error);
+        }
+        return $result;
+    }
+    // Delete data
+    public function delete($query)
+    {
+        $result = $this->conn->query($query);
+        if (!$result) {
+            die("Delete failed: " . $this->conn->error);
+        }
+        return $result;
     }
 
     // Close connection

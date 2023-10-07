@@ -51,9 +51,11 @@ class Register
         $query = "INSERT INTO users (name, username, email, password) VALUES('$name', '$username', '$email', '$hashedPassword')";
         $inserted = $this->db->insert($query);
         if ($inserted) {
+            $this->db->close();
             header('Location: ../admin/login.php');
             exit;
         } else {
+            $this->db->close();
             return "Registration failed!";
         }
     }
