@@ -1,25 +1,29 @@
 <?php
-include_once('./inc/head.php');
-include '../classes/Category.php';
+include_once './layouts/head.php';
+include_once '../classes/Category.php';
 
 $category = new Category();
-$categories = $category->listCategories();
+$categories = $category->getAllCategories();
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
   $result = $category->deleteCategory($id);
 }
 ?>
+<!-- Vendors CSS -->
+<link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/datatables.min.css" rel="stylesheet">
+</head>
+<body>
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
   <div class="layout-container">
     <!-- Menu or Sidebar -->
-    <?php include_once './inc/sidebar.php'; ?>
+    <?php include_once './layouts/sidebar.php'; ?>
     <!-- / Menu or Sidebar -->
 
     <!-- Layout container -->
     <div class="layout-page">
       <!-- Navbar -->
-      <?php include_once './inc/navbar.php'; ?>
+      <?php include_once './layouts/navbar.php'; ?>
       <!-- / Navbar -->
 
       <div class="content-wrapper">
@@ -54,31 +58,33 @@ if (isset($_GET['id'])) {
                     <tr>
                       <th>id</th>
                       <th>Category Name</th>
+                      <th>Category slug</th>
                       <th class="text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
                     if ($categories) {
-                      while ($row = $categories->fetch_assoc()) { ?>
+                      $i = 1;
+                      while ($row = $categories->fetch(PDO::FETCH_ASSOC)) { ?>
                         <tr>
                           <td>
-                            <?php echo $row['id']; ?>
+                            <?php echo $i++; ?>
                           </td>
                           <td>
                             <?php echo $row['name']; ?>
                           </td>
+                          <td>
+                            <?php echo $row['slug']; ?>
+                          </td>
                           <td class="text-center">
-                            <a href="edit-category.php?id=<?php echo $row['id']; ?>">
-                              <button type="button" class="btn btn-sm btn-outline-primary">
-                                Edit
-                              </button>
+                            <a class="btn btn-sm btn-outline-primary" href="edit-category.php?id=<?php echo $row['id']; ?>">
+                              <i class="fs-5 bx bx-edit"></i>
                             </a>
-                            <a href="?id=<?php echo $row['id']; ?>"
-                              onclick="return confirm('Are you sure you want to delete?')"><button type="button"
-                                class="btn btn-sm btn-outline-danger">
-                                Delete
-                              </button></a>
+                            <a class="btn btn-sm btn-outline-danger" href="?id=<?php echo $row['id']; ?>"
+                              onclick="return confirm('Are you sure you want to delete?')"
+                              onclick="return confirm('Are you sure you want to delete?')"><i
+                                class="fs-5 bx bx-trash"></i></a>
                           </td>
                         </tr>
                         <?php
@@ -102,4 +108,8 @@ if (isset($_GET['id'])) {
 </div>
 
 <!-- JavaScript -->
-<?php include_once './inc/script.php'; ?>
+<?php include_once './layouts/script.php'; ?>
+<script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/datatables.min.js"></script>
+<script>$('#example').DataTable();</script>
+</body>
+</html>

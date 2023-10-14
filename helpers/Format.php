@@ -9,4 +9,12 @@ class Format
         $data = htmlspecialchars($data);
         return $data;
     }
+    // Text Shorten
+    public function textShorten($text, $limit)
+    {
+        $text = $text . " ";
+        $text = substr($text, 0, $limit);
+        $text = $text . "...";
+        return $text;
+    }
 }

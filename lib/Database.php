@@ -1,5 +1,5 @@
 <?php
-include '../config/config.php';
+require_once 'config.php';
 
 class Database
 {
@@ -19,59 +19,26 @@ class Database
     // Connect to the database
     private function connectDB()
     {
-        $this->conn = new mysqli($this->host, $this->user, $this->password, $this->database);
-        if ($this->conn->connect_error) {
-            die("Connection failed: " . $this->conn->connect_error);
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->database}", $this->user, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
         }
-    }
-    // Select Data
-    public function select($query)
-    {
-        $result = $this->conn->query($query);
-        if (!$result) {
-            die("Query failed: " . $this->conn->error);
-        }
-        return $result->fetch_assoc();
-    }
-    // Select All Data
-    public function selectAll($query){
-        $result = $this->conn->query($query);
-        if (!$result) {
-            die("Query failed: " . $this->conn->error);
-        }
-        return $result;
-    }
-    // Insert data
-    public function insert($query)
-    {
-        $result = $this->conn->query($query);
-        if (!$result) {
-            die("Insertion failed: " . $this->conn->error);
-        }
-        return $result;
-    }
-    // Update data
-    public function update($query)
-    {
-        $result = $this->conn->query($query);
-        if (!$result) {
-            die("Update failed: " . $this->conn->error);
-        }
-        return $result;
-    }
-    // Delete data
-    public function delete($query)
-    {
-        $result = $this->conn->query($query);
-        if (!$result) {
-            die("Delete failed: " . $this->conn->error);
-        }
-        return $result;
     }
 
-    // Close connection
+    // Prepare and execute a query
+    public function query($sql, $params = [])
+    {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }
+
+
+    // Close the database connection
     public function close()
     {
-        $this->conn->close();
+        $this->conn = null;
     }
 }

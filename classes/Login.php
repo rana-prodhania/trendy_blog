@@ -1,11 +1,10 @@
 <?php
-
 require_once '../lib/Database.php';
 require_once '../helpers/Format.php';
 
 class Login
 {
-    private $db;
+    public $db;
     private $format;
 
     public function __construct()
@@ -20,28 +19,38 @@ class Login
         $email = $this->format->sanitize($data['email']);
         $password = $this->format->sanitize($data['password']);
 
-        // Fetch user data by email
-        $query = "SELECT * FROM users WHERE email = '$email'";
-        $user = $this->db->select($query);
-
         if (empty($email) || empty($password)) {
             return "All fields are required!";
         }
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return "Invalid email format!";
+        }
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $this->db->close();
-            header("Location: index.php");
-            exit;
+        // if(strlen($password) < 6) {
+        //     return "Password must be at least 6 characters!";
+        // }
+
+
+        $query = "SELECT * FROM admins WHERE email = ?";
+        $stmt = $this->db->query($query, [$email]);
+        
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (password_verify($password, $result['password'])) {
+                $_SESSION['id'] = $result['id'];
+                $_SESSION['name'] = $result['name'];
+                $this->db->close();
+                header('Location: dashboard.php');
+                exit();
+            } else {
+                $this->db->close();
+                return "Incorrect password!";
+            }
         } else {
             $this->db->close();
-            return "email or password is incorrect!";
+            return "Incorrect email or password!";
         }
-    }
-
-    public function logout()
-    {
-        session_unset();
-        session_destroy();
     }
 }

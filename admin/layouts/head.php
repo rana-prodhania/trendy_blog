@@ -1,3 +1,13 @@
+<?php 
+session_start();
+if(!isset($_SESSION['id'])) {
+  header('Location: index.php');
+  exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport"
@@ -20,17 +30,5 @@
   <link rel="stylesheet" href="./assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
   <link rel="stylesheet" href="./assets/css/demo.css" />
 
-  <!-- Vendors CSS -->
-  <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/datatables.min.css" rel="stylesheet">
-
-  <!-- Page CSS -->
-  <link rel="stylesheet" href="./assets/vendor/css/pages/page-auth.css">
-
   <!-- Helpers -->
   <script src="./assets/vendor/js/helpers.js"></script>
-  <script src="./assets/js/config.js"></script>
-
-
-</head>
-
-<body></body>
