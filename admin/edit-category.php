@@ -38,18 +38,18 @@ if (isset($_POST['submit'])) {
               <div class="card mb-4">
                 <div class="card-header d-flex align-items-center justify-content-between">
                   <h5 class="mb-0">Edit Category</h5>
-                  <a href="./category.php" class="btn btn-sm btn-outline-primary">Back</a>
+                  <a href="./categories.php" class="btn btn-sm btn-outline-primary">Back</a>
                 </div>
                 <div class="card-body">
                   <form action="" method="POST">
 
                     <div class="row mb-3">
                       <div class="col-sm-2">
-                        <label for="validationCustom03" class="form-label">Category Name</label>
+                        <label for="category-name" class="form-label">Category Name</label>
                       </div>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" name="category-name" id="validationCustom03"
-                          value="<?php echo $category_id['name']; ?>" />
+                        <input type="text" class="form-control" name="category-name" id="category-name"
+                          value="<?php echo $category_id['name']??''; ?>" />
                         <input class="d-none" type="text" name="category-id" value="<?php echo $category_id['id']; ?>">
                         <?php
                         if (isset($result)) {

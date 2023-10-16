@@ -17,28 +17,24 @@ class Post
   // Add Post
   public function addPost($data, $files)
   {
-    $title = $this->format->sanitize($data['post-title']);
+    $title = $this->format->sanitize($data['title']);
     $category_id = $data['category-id'] ?? "";
-    $image = $files['post-image'];
+    $image = $files['image'];
     $description = $data['description'];
-    $type = $data['post-type'] ?? "1";
-    $tag = $this->format->sanitize($data['post-tag']);
-    $status = $data['post-status'] ?? "1";
+    $status = $data['status'];
 
     // Check if all fields is empty
     if (!empty($title) && !empty($category_id) && !empty($image) && !empty($description) && !empty($type) && !empty($tag)) {
       // Image upload
       $image = $this->uploadImage($image);
-      $query = "INSERT INTO posts (title, category_id, image, description, type, tag, status) 
-             VALUES ('$title', '$category_id', '$image', '$description', '$type', '$tag', '$status')";
-      $inserted = $this->db->insert($query);
+      $query = "INSERT INTO posts (title, category_id, image, description, status) 
+             VALUES ('$title', '$category_id', '$image', '$description',   '$status')";
+      $inserted = $this->db->query($query);
 
       if ($inserted) {
-        $this->db->close();
-        header("Location: index-post.php");
+        header("Location: posts.php");
         exit;
       } else {
-        $this->db->close();
         return "Post addition failed!";
       }
 
@@ -69,16 +65,12 @@ class Post
   // Get All Post
   public function getAllPost()
   {
-    // Join table posts and categories
-    $query = "SELECT posts.*, categories.name AS category_name FROM posts JOIN categories ON posts.category_id = categories.id ORDER BY posts.id DESC";
-    $posts = $this->db->selectAll($query);
-    if ($posts) {
-      // $this->db->close();
-      return $posts;
-    } else {
-      $this->db->close();
-      return "Post listing failed!";
-    }
+    $query = "SELECT posts.id, posts.title, categories.name as category_name
+              FROM posts 
+              INNER JOIN categories ON posts.category_id = categories.id";
+    $posts = $this->db->query($query) ?? "Post listing failed!";
+    return $posts;
   }
+  
 
 }

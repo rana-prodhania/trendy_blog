@@ -28,17 +28,25 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <li class="menu-header small text-uppercase"><span class="menu-header-text">All Filed</span></li>
         <!-- Categories -->
-        <li class="menu-item <?php if ($current_page === 'category.php')
+        <li class="menu-item <?php if ($current_page === 'categories.php' || $current_page === 'add-category.php' || $current_page === 'edit-category.php')
             echo 'active'; ?>">
-            <a href="category.php" class="menu-link">
+            <a href="categories.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-category"></i>
                 <div>Categories</div>
             </a>
         </li>
-        <!-- Post -->
-        <li class="menu-item <?php if ($current_page === 'index-post.php')
+        <!-- Tags -->
+        <li class="menu-item <?php if ($current_page === 'tags.php' || $current_page === 'add-tag.php' || $current_page === 'edit-tag.php')
             echo 'active'; ?>">
-            <a href="./index-post.php" class="menu-link">
+            <a href="tags.php" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-purchase-tag-alt"></i>
+                <div>Tags</div>
+            </a>
+        </li>
+        <!-- Post -->
+        <li class="menu-item <?php if ($current_page === 'posts.php')
+            echo 'active'; ?>">
+            <a href="./posts.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-envelope"></i>
                 <div>Posts</div>
             </a>

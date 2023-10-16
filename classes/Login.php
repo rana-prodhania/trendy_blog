@@ -27,9 +27,9 @@ class Login
             return "Invalid email format!";
         }
 
-        // if(strlen($password) < 6) {
-        //     return "Password must be at least 6 characters!";
-        // }
+        if(strlen($password) < 6) {
+            return "Password must be at least 6 characters!";
+        }
 
 
         $query = "SELECT * FROM admins WHERE email = ?";
@@ -41,15 +41,13 @@ class Login
             if (password_verify($password, $result['password'])) {
                 $_SESSION['id'] = $result['id'];
                 $_SESSION['name'] = $result['name'];
-                $this->db->close();
                 header('Location: dashboard.php');
                 exit();
             } else {
-                $this->db->close();
                 return "Incorrect password!";
             }
         } else {
-            $this->db->close();
+            
             return "Incorrect email or password!";
         }
     }

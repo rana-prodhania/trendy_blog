@@ -32,3 +32,4 @@ if(!isset($_SESSION['id'])) {
 
   <!-- Helpers -->
   <script src="./assets/vendor/js/helpers.js"></script>
+  

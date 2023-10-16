@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
 
-class Database
+class  Database
 {
     private $host = DB_HOST;
     private $user = DB_USER;
@@ -10,7 +10,6 @@ class Database
 
     private $conn;
 
-    // Constructor
     public function __construct()
     {
         $this->connectDB();
@@ -30,15 +29,11 @@ class Database
     // Prepare and execute a query
     public function query($sql, $params = [])
     {
+        if(!$this->conn) {
+            $this->connectDB();
+        }
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return $stmt;
-    }
-
-
-    // Close the database connection
-    public function close()
-    {
-        $this->conn = null;
     }
 }

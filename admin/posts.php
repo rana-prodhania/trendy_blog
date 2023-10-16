@@ -1,6 +1,6 @@
 <?php
-include_once('./inc/head.php');
-include '../classes/Post.php';
+include_once './layouts/head.php';
+include_once '../classes/Post.php';
 $post = new Post();
 
 include_once '../helpers/Format.php';
@@ -12,17 +12,21 @@ if (isset($_GET['id'])) {
   $result = $category->deleteCategory($id);
 }
 ?>
+<!-- Vendors CSS -->
+<link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/datatables.min.css" rel="stylesheet">
+</head>
+<body>
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
   <div class="layout-container">
     <!-- Menu or Sidebar -->
-    <?php include_once './inc/sidebar.php'; ?>
+    <?php include_once './layouts/sidebar.php'; ?>
     <!-- / Menu or Sidebar -->
 
     <!-- Layout container -->
     <div class="layout-page">
       <!-- Navbar -->
-      <?php include_once './inc/navbar.php'; ?>
+      <?php include_once './layouts/navbar.php'; ?>
       <!-- / Navbar -->
 
       <div class="content-wrapper">
@@ -65,7 +69,7 @@ if (isset($_GET['id'])) {
                     <?php
                     if ($posts) {
 
-                      while ($row = $posts->fetch_assoc()) { ?>
+                      while ($row = $posts->fetch(PDO::FETCH_ASSOC)) { ?>
                         <tr>
                           <td>
                             <?php echo $row['id']; ?>
@@ -109,7 +113,7 @@ if (isset($_GET['id'])) {
   </div>
 </div>
 
-<div class="card mb-4">
+<!-- <div class="card mb-4">
   <div class="card-body">
     <?php
     if ($posts) {
@@ -179,7 +183,11 @@ if (isset($_GET['id'])) {
     }
     ?>
   </div>
-</div>
+</div> -->
 
 <!-- JavaScript -->
-<?php include_once './inc/script.php'; ?>
+<?php include_once './layouts/script.php'; ?>
+<script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/b-2.4.2/r-2.5.0/datatables.min.js"></script>
+<script>$(document).ready(function () { $('#example').DataTable(); });</script>
+</body>
+</html>

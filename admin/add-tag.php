@@ -1,16 +1,15 @@
 <?php
 include_once './layouts/head.php';
-include_once '../classes/Category.php';
+include_once '../classes/Tag.php';
 
-$category = new Category();
-$categoryName = '';
+$tag = new Tag();
 
 if (isset($_POST['submit'])) {
-  $categoryName = isset($_POST['category-name']) ? $_POST['category-name'] : '';
-  $result = $category->addCategory($_POST);
-}
+   $result = $tag->addTag($_POST);
 
+}
 ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.17.9/tagify.min.css" />
 </head>
 <body>
 <!-- Layout wrapper -->
@@ -33,19 +32,19 @@ if (isset($_POST['submit'])) {
             <div class="col-xxl">
               <div class="card mb-4">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                  <h5 class="mb-0">Add Category</h5>
-                  <a href="categories.php" class="btn btn-sm btn-outline-danger">Back</a>
+                  <h5 class="mb-0">Add Tag</h5>
+                  <a href="tags.php" class="btn btn-sm btn-outline-danger">Back</a>
                 </div>
                 <div class="card-body">
                   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 
                     <div class="row mb-3">
                       <div class="col-sm-2">
-                        <label for="category-name" class="form-label">Category Name</label>
+                        <label for="tag-name" class="form-label">Tag Name</label>
                       </div>
                       <div class="col-sm-10">
-                        <input type="text" value="<?php echo ($categoryName); ?>" class="form-control"
-                          name="category-name" id="category-name" />
+                      <input type="text" class="form-control" name='tag-name' autofocus id="post-tag"
+                            placeholder="Post tag" />
                         <!-- Error Message -->
                         <?php
                         if (isset($result)) {
@@ -60,7 +59,7 @@ if (isset($_POST['submit'])) {
                     <div class="row justify-content-end">
                       <div class="col-sm-10">
                         <button type="submit" name="submit" class="btn btn-primary">
-                          Add Category
+                          Add Tag
                         </button>
                       </div>
                     </div>
@@ -79,5 +78,8 @@ if (isset($_POST['submit'])) {
 
 <!-- JavaScript -->
 <?php include_once './layouts/script.php'; ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.17.9/tagify.min.js"></script>
+<script>const input = document.querySelector('input[name=tag-name]');
+      new Tagify(input);</script> 
 </body>
 </html>

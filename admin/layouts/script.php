@@ -6,3 +6,8 @@
 
 <!-- Main JS -->
 <script src="./assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" ></script>
+<script>
+    toastr.options.closeButton = true;
+    toastr.options.progressBar = true;
+</script>
