@@ -84,7 +84,7 @@ if (isset($_GET['id'])) {
                                 href="edit-category.php?id=<?php echo $row['id']; ?>">
                                 <i class="fs-5 bx bx-edit"></i>
                               </a>
-                              <a class="btn btn-sm btn-outline-danger" id="btn-delete"
+                              <a class="btn btn-sm btn-outline-danger btn-delete"
                                 href="?id=<?php echo $row['id']; ?>"><i class="fs-5 bx bx-trash"></i></a>
                             </td>
                           </tr>

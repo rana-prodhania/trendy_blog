@@ -44,7 +44,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         </li>
         <!-- Post -->
-        <li class="menu-item <?php if ($current_page === 'posts.php')
+        <li class="menu-item <?php if ($current_page === 'posts.php' || $current_page === 'add-post.php' || $current_page === 'edit-post.php')
             echo 'active'; ?>">
             <a href="./posts.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-envelope"></i>

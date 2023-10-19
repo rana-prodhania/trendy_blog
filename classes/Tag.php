@@ -1,16 +1,17 @@
 <?php
-require_once '../lib/Database.php';
-require_once '../helpers/Format.php';
+$realPath = dirname(__FILE__);
+require_once $realPath. './../lib/Database.php';
+require_once '../helpers/Helper.php';
 
 class Tag
 {
     private $db;
-    private $format;
+    private $helper;
 
     public function __construct()
     {
         $this->db = new Database();
-        $this->format = new Format();
+        $this->helper = new Helper();
     }
 
     // Add Tag
@@ -30,7 +31,7 @@ class Tag
             foreach ($tagArray as $tagData) {
                 if (isset($tagData['value'])) {
                     $name = $tagData['value'];
-                    $slug = $this->generateSlug($name);
+                    $slug = $this->helper->generateSlug($name);
 
                     if ($this->doesTagExist($slug)) {
                         throw new Exception("Tag name '$name' already exists!");
@@ -53,7 +54,7 @@ class Tag
                 throw new Exception("Tag addition failed.");
             }
             $_SESSION['success'] = "Tag added successfully!";
-            header("Location: tags.php");
+            $this->helper->redirect("tags.php");
             exit;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -64,8 +65,8 @@ class Tag
     public function updateTag($data)
     {
         try {
-            $name = $this->format->sanitize($data['tag-name']);
-            $id = $this->format->sanitize($data['tag-id']);
+            $name = $this->helper->sanitize($data['tag-name']);
+            $id = $this->helper->sanitize($data['tag-id']);
 
 
             // Check if name is empty
@@ -74,7 +75,7 @@ class Tag
             }
 
             // Generate slug
-            $slug = $this->generateSlug($name);
+            $slug = $this->helper->generateSlug($name);
 
             // Check if name exists
             if ($this->doesTagExist($slug)) {
@@ -87,7 +88,7 @@ class Tag
                 throw new Exception("Tag update failed!");
             }
             $_SESSION['success'] = "Tag updated successfully!";
-            header("Location: tags.php");
+            $this->helper->redirect("tags.php");
             exit;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -130,7 +131,7 @@ class Tag
                 throw new Exception("Tag deletion failed!");
             }
             $_SESSION['success'] = "Tag deleted successfully!";
-            header("Location: tags.php");
+            $this->helper->redirect("tags.php");
             exit;
         } catch (PDOException $e) {
             return $e->getMessage();
@@ -149,12 +150,4 @@ class Tag
             return $e->getMessage();
         }
     }
-
-    // //  Generate slug
-    public function generateSlug($name)
-    {
-        $slug = trim(preg_replace('/[^a-zA-Z0-9\p{Bengali}-]+/u', '-', strtolower($name)), '-');
-        return $slug;
-    }
-
 }

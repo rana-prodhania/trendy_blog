@@ -1,23 +1,24 @@
 <?php
-require_once '../lib/Database.php';
-require_once '../helpers/Format.php';
+$realPath = dirname(__FILE__);
+require_once $realPath. './../lib/Database.php';
+require_once '../helpers/Helper.php';
 
 class Login
 {
     public $db;
-    private $format;
+    private $helper;
 
     public function __construct()
     {
         $this->db = new Database();
-        $this->format = new Format();
+        $this->helper = new Helper();
         session_start();
     }
 
     public function login($data)
     {
-        $email = $this->format->sanitize($data['email']);
-        $password = $this->format->sanitize($data['password']);
+        $email = $this->helper->sanitize($data['email']);
+        $password = $this->helper->sanitize($data['password']);
 
         if (empty($email) || empty($password)) {
             return "All fields are required!";

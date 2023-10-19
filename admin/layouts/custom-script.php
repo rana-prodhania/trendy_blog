@@ -9,7 +9,7 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js
 "></script>
 <script>$(document).ready(function () {
         $('#example').DataTable({ responsive: true });
-        $('#btn-delete').on('click', function (e) {
+        $('.btn-delete').on('click', function (e) {
             e.preventDefault();
             const href = $(this).attr('href');
             Swal.fire({

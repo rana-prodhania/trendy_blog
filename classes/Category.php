@@ -1,42 +1,36 @@
 <?php
-require_once '../lib/Database.php';
-include_once '../lib/MessageHandler.php';
-require_once '../helpers/Format.php';
+$realPath = dirname(__FILE__);
+require_once $realPath . './../lib/Database.php';
+require_once '../helpers/Helper.php';
 
 class Category
 {
     private $db;
-    private $format;
+    private $helper;
 
     public function __construct()
     {
         $this->db = new Database();
-        $this->format = new Format();
+        $this->helper = new Helper();
     }
 
     // Add Category
     public function addCategory($data)
     {
         try {
-            $name = $this->format->sanitize($data['category-name']);
-
-
+            $name = $this->helper->sanitize($data['category-name']);
 
             if (empty($name)) {
                 throw new Exception("Category name is required!");
             }
 
+            // Validate name
+            $this->helper->validateName($name);
 
-            if (!preg_match('/^(?=.*[\p{Bengali}a-zA-Z])[a-zA-Z0-9\-\p{Bengali} ]+$/u', $name)) {
-                throw new Exception("Category name should only contain letters, numbers, and hyphens.");
-            }
+            // Name length
+            $this->helper->nameLength($name);
 
-            if (strlen($name) < 3 || strlen($name) > 80) {
-                throw new Exception("Category name should be between 3 and 80 characters.");
-            }
-
-
-            $slug = $this->generateSlug($name);
+            $slug = $this->helper->generateSlug($name);
 
             if ($this->doesCategoryExist($slug)) {
                 throw new Exception("Category name already exists!");
@@ -48,9 +42,10 @@ class Category
             if (!$result) {
                 throw new Exception("Category addition failed!");
             }
+
             $_SESSION['success'] = "Category added successfully!";
-            header("Location: categories.php");
-            exit;
+            $this->helper->redirect("categories.php");
+
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -61,17 +56,19 @@ class Category
     public function updateCategory($data)
     {
         try {
-            $name = $this->format->sanitize($data['category-name']);
-            $id = $this->format->sanitize($data['category-id']);
-
+            $name = $this->helper->sanitize($data['category-name']);
+            $id = $this->helper->sanitize($data['category-id']);
 
             // Check if name is empty
             if (empty($name)) {
                 throw new Exception("Category name is required!");
             }
 
+            // Validate name
+            $this->helper->validateName($name);
+
             // Generate slug
-            $slug = $this->generateSlug($name);
+            $slug = $this->helper->generateSlug($name);
 
             // Check if name exists
             if ($this->doesCategoryExist($slug)) {
@@ -84,7 +81,7 @@ class Category
                 throw new Exception("Category update failed!");
             }
             $_SESSION['success'] = "Category updated successfully!";
-            header("Location: categories.php");
+            $this->helper->redirect("categories.php");
             exit;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -108,7 +105,7 @@ class Category
     public function getCategory($data)
     {
         try {
-            $id = $this->format->sanitize($data['id']);
+            $id = $this->helper->sanitize($data['id']);
             $query = "SELECT * FROM categories WHERE id = ?";
             $result = $this->db->query($query, [$id])->fetch(PDO::FETCH_ASSOC);
             return $result ?? "Category not found!";
@@ -126,7 +123,7 @@ class Category
             if (!$result) {
                 throw new Exception("Category deletion failed!");
             }
-            header("Location: categories.php");
+            $this->helper->redirect("categories.php");
             exit;
         } catch (PDOException $e) {
             return $e->getMessage();
@@ -145,12 +142,4 @@ class Category
             return $e->getMessage();
         }
     }
-
-    //  Generate slug
-    public function generateSlug($name)
-    {
-        $slug = trim(preg_replace('/[^a-zA-Z0-9\p{Bengali}-]+/u', '-', strtolower($name)), '-');
-        return $slug;
-    }
-
 }
