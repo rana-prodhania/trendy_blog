@@ -8,11 +8,11 @@ $post = new Post();
 $category = new Category();
 $tag = new Tag();
 $categories = $category->getAllCategories();
-$tags = $tag->getAllTags();
+$tags = $tag->getAllTagsAdmin();
 
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
-  $result1 = $post->getPost($id);
+  $result1 = $post->getPostAdmin($id);
 }
 
 if (isset($_POST['submit'])) {

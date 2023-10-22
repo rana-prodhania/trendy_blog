@@ -10,7 +10,7 @@ class Helper
         return $data;
     }
     // Text Shorten
-    public function textShorten($text, $limit)
+    public static function textShorten($text, $limit)
     {
         // $text = $text . " ";
         // $text = substr($text, 0, $limit);

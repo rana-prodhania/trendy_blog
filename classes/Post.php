@@ -1,7 +1,7 @@
 <?php
 $realPath = dirname(__FILE__);
 require_once $realPath . './../lib/Database.php';
-require_once '../helpers/Helper.php';
+require_once $realPath . './../helpers/Helper.php';
 
 class Post
 {
@@ -72,15 +72,15 @@ class Post
       // Check if a new image is provided
       if (isset($files['post-image']['name']) && !empty($files['post-image']['name'])) {
         // Get the old image path
-        $post = $this->getPost($id);
+        $post = $this->getPostAdmin($id);
         $oldImage = 'uploads/post-img/' . $post['image'];
 
         // Delete the old image
         if (file_exists($oldImage)) {
-            unlink($oldImage);
+          unlink($oldImage);
 
-            // Upload the new image
-            $image = $this->uploadImage($image);
+          // Upload the new image
+          $image = $this->uploadImage($image);
         }
       } else {
         $image = $oldImage;
@@ -117,14 +117,27 @@ class Post
     }
   }
 
-
-
-
+  // Get All Post
+  public function getAllPostAdmin()
+  {
+    try {
+      $query = "SELECT posts.id, posts.title,posts.status, categories.name  as category_name FROM posts INNER JOIN categories ON posts.category_id = categories.id ORDER BY posts.id DESC";
+      $statement = $this->db->query($query);
+      return $statement ?? "Post not found!";
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
   // Get All Post
   public function getAllPost()
   {
     try {
-      $query = "SELECT posts.id, posts.title,posts.status, categories.name  as category_name FROM posts INNER JOIN categories ON posts.category_id = categories.id";
+      $query = "SELECT posts.*, categories.name AS category_name, admins.name AS author
+      FROM posts
+      INNER JOIN categories ON posts.category_id = categories.id
+      INNER JOIN admins ON posts.admin_id = admins.id
+      WHERE posts.status = 1
+      ORDER BY updated_at DESC";
       $statement = $this->db->query($query);
       return $statement ?? "Post not found!";
     } catch (PDOException $e) {
@@ -132,8 +145,8 @@ class Post
     }
   }
 
-  // Get a Post
-  public function getPost($id)
+  // Get a Post for Admin
+  public function getPostAdmin($id)
   {
     try {
       // join table posts and categories,admin to get category name and admin name
@@ -145,12 +158,25 @@ class Post
       return $e->getMessage();
     }
   }
+  // Get a Post for Frontend
+  public function getPost($slug)
+  {
+    try {
+      // join table posts and categories,admin to get category name and admin name
+      $query = "SELECT posts.*, categories.name as category_name, admins.name as author FROM posts INNER JOIN categories ON posts.category_id = categories.id INNER JOIN admins ON posts.admin_id = admins.id WHERE posts.slug = ? ";
+
+      $statement = $this->db->query($query, [$slug]);
+      return $statement->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
 
   // Delete Post
   public function deletePost($id)
   {
     try {
-      $post = $this->getPost($id);
+      $post = $this->getPostAdmin($id);
       $imagePath = 'uploads/post-img/' . $post['image'];
 
       $query = "DELETE FROM posts WHERE id = ?";

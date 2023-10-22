@@ -8,7 +8,7 @@ $post = new Post();
 $category = new Category();
 $tag = new Tag();
 $categories = $category->getAllCategories();
-$tags = $tag->getAllTags();
+$tags = $tag->getAllTagsAdmin();
 
 if (isset($_POST['submit'])) {
   $result = $post->addPost($_POST, $_FILES);

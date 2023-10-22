@@ -1,7 +1,7 @@
 <?php
 $realPath = dirname(__FILE__);
 require_once $realPath . './../lib/Database.php';
-require_once '../helpers/Helper.php';
+require_once $realPath . './../helpers/Helper.php';
 
 class Category
 {

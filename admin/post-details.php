@@ -6,7 +6,7 @@ $post = new Post();
 
 if($_GET['id']){
   $id = $_GET['id'];
-  $result = $post->getPost($id);
+  $result = $post->getPostAdmin($id);
 }
 
 ?>

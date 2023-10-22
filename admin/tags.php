@@ -4,7 +4,7 @@ include_once './layouts/custom-css.php';
 include_once '../classes/Tag.php';
 
 $tag = new Tag();
-$tags = $tag->getAllTags();
+$tags = $tag->getAllTagsAdmin();
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
   $result = $tag->deleteTag($id);

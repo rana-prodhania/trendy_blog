@@ -1,7 +1,7 @@
 <?php
 $realPath = dirname(__FILE__);
 require_once $realPath. './../lib/Database.php';
-require_once '../helpers/Helper.php';
+require_once $realPath. './../helpers/Helper.php';
 
 class Tag
 {
@@ -96,11 +96,22 @@ class Tag
 
     }
 
+    // Get all tags admin
+    public function getAllTagsAdmin()
+    {
+        try {
+            $query = "SELECT * FROM tags ORDER BY id DESC";
+            $statement = $this->db->query($query);
+            return $statement ?? "Category not found!";
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
     // Get all tags
     public function getAllTags()
     {
         try {
-            $query = "SELECT * FROM tags ORDER BY id DESC";
+            $query = "SELECT * FROM tags ORDER BY RAND() LIMIT 10";
             $statement = $this->db->query($query);
             return $statement ?? "Category not found!";
         } catch (PDOException $e) {

@@ -4,7 +4,7 @@ include_once './layouts/custom-css.php';
 include_once '../classes/Post.php';
 
 $post = new Post();
-$posts = $post->getAllPost();
+$posts = $post->getAllPostAdmin();
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
   $result = $post->deletePost($id);
@@ -56,7 +56,7 @@ if (isset($_GET['id'])) {
                   <table id="example" class="table table-striped" style="width: 100%">
                     <thead>
                       <tr>
-                        <th>S/N</th>
+                        <th >S/N</th>
                         <th>Post title</th>
                         <th>Category</th>
                         <th>Status</th>
@@ -73,7 +73,7 @@ if (isset($_GET['id'])) {
                               <?php echo $i++; ?>
                             </td>
                             <td>
-                              <?php echo $row['title']; ?>
+                              <?php echo Helper::textShorten($row['title'], 40) ?>
                             </td>
                             <td>
                               <?php echo $row['category_name']; ?>
