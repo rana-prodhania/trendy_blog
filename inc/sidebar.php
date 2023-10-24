@@ -55,7 +55,7 @@ $tags = $tag->getAllTags();
         <h3 class="heading">Categories</h3>
         <ul class="categories">
         <?php foreach ($categories as $category): ?>
-            <li><a href="#"><?php echo $category['name']; ?> <span>(12)</span></a></li>
+            <li><a href="category.php?id=<?php echo $category['id']; ?>"><?php echo $category['name']; ?></a></li>
             <?php endforeach; ?>
         </ul>
     </div>

@@ -117,7 +117,7 @@ class Post
     }
   }
 
-  // Get All Post
+  // Get All Post Admin
   public function getAllPostAdmin()
   {
     try {
@@ -128,22 +128,7 @@ class Post
       return $e->getMessage();
     }
   }
-  // Get All Post
-  public function getAllPost()
-  {
-    try {
-      $query = "SELECT posts.*, categories.name AS category_name, admins.name AS author
-      FROM posts
-      INNER JOIN categories ON posts.category_id = categories.id
-      INNER JOIN admins ON posts.admin_id = admins.id
-      WHERE posts.status = 1
-      ORDER BY updated_at DESC";
-      $statement = $this->db->query($query);
-      return $statement ?? "Post not found!";
-    } catch (PDOException $e) {
-      return $e->getMessage();
-    }
-  }
+
 
   // Get a Post for Admin
   public function getPostAdmin($id)
@@ -167,6 +152,108 @@ class Post
 
       $statement = $this->db->query($query, [$slug]);
       return $statement->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+
+  public function getPostByCategory($id, $limit = 1)
+  {
+    try {
+      $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+      $countQuery = "SELECT COUNT(*) FROM posts WHERE status = 1 AND category_id = ?";
+      $totalPost = $this->db->query($countQuery, [$id])->fetchColumn();
+
+      if (!$totalPost) {
+        return ['totalPage' => 0, 'data' => [], 'page' => $page, 'message' => 'No post found in this category!'];
+      }
+
+      $totalPage = ceil($totalPost / $limit);
+      $start = ($page - 1) * $limit;
+
+      $query = "SELECT posts.*, categories.name as category_name, admins.name as author 
+              FROM posts 
+              INNER JOIN categories ON posts.category_id = categories.id 
+              INNER JOIN admins ON posts.admin_id = admins.id 
+              WHERE posts.status = 1 
+              AND posts.category_id = ?
+              ORDER BY posts.id DESC 
+              LIMIT $start, $limit";
+
+      $posts = $this->db->query($query, [$id])->fetchAll(PDO::FETCH_ASSOC);
+
+      return ['totalPage' => $totalPage, 'data' => $posts, 'page' => $page];
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+
+
+
+  // Search Post with keyword and pagination
+  public function searchPost($keyword, $limit = 1)
+  {
+    try {
+      $page = $_GET['page'] ?? 1;
+
+      $countQuery = "SELECT COUNT(*) FROM posts WHERE status = 1 AND (title LIKE :keyword OR description LIKE :keyword)";
+      $params = [
+        ':keyword' => '%' . $keyword . '%'
+      ];
+      $totalPost = $this->db->query($countQuery, $params)->fetchColumn();
+      if (!$totalPost) {
+        return ['totalPage' => 0, 'data' => [], 'page' => $page, 'message' => 'No post found!'];
+      }
+      $totalPage = ceil($totalPost / $limit);
+      $start = ($page - 1) * $limit;
+
+      $query = "SELECT posts.*, categories.name as category_name, admins.name as author 
+              FROM posts 
+              INNER JOIN categories ON posts.category_id = categories.id 
+              INNER JOIN admins ON posts.admin_id = admins.id 
+              WHERE posts.status = 1 
+              AND (posts.title LIKE :keyword OR posts.description LIKE :keyword) 
+              ORDER BY posts.id DESC 
+              LIMIT $start, $limit";
+
+      $posts = $this->db->query($query, $params)->fetchAll(PDO::FETCH_ASSOC);
+
+      return ['totalPage' => $totalPage, 'data' => $posts, 'page' => $page];
+
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+
+
+
+  // Get All Post With Pagination
+  public function getAllPost($limit)
+  {
+    try {
+      $page = isset($_GET['page']) ? $_GET['page'] : 1;
+      $countQuery = "SELECT COUNT(*) FROM posts WHERE status = 1";
+      $totalPost = $this->db->query($countQuery)->fetchColumn();
+
+      if (!$totalPost) {
+        return ['totalPage' => 0, 'data' => [], 'page' => $page, 'message' => 'No post found!'];
+      }
+
+      $totalPage = ceil($totalPost / $limit);
+      
+      $start = ($page - 1) * $limit;
+
+      $selectQuery = "SELECT posts.*, categories.name AS category_name, admins.name AS author
+            FROM posts
+            INNER JOIN categories ON posts.category_id = categories.id
+            INNER JOIN admins ON posts.admin_id = admins.id
+            WHERE posts.status = 1
+            ORDER BY updated_at DESC LIMIT $start, $limit";
+
+      $posts = $this->db->query($selectQuery)->fetchAll(PDO::FETCH_ASSOC);
+
+      return ['totalPage' => $totalPage, 'data' => $posts, 'page' => $page];
     } catch (PDOException $e) {
       return $e->getMessage();
     }

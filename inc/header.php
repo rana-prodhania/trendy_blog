@@ -11,15 +11,17 @@ $categories = $category->getAllCategories();
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
+                    <a class="nav-link" href="index.php">Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle active" href="category.html" id="dropdown05"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown05">
-                        <?php foreach ($categories as $category) : ?>
-                        <a class="dropdown-item" href="category.html"><?php echo $category['name']; ?></a>
-                        
+                        <?php foreach ($categories as $category): ?>
+                            <a class="dropdown-item" href="category.php?id=<?php echo $category['id']; ?>">
+                                <?php echo $category['name']; ?>
+                            </a>
+
                         <?php endforeach; ?>
                     </div>
 
@@ -32,9 +34,9 @@ $categories = $category->getAllCategories();
                 </li>
             </ul>
             <div class="col-3 search-top pt-3">
-                <form action="#" class="search-top-form">
+                <form action="search-post.php" method="get" class="search-top-form">
+                    <input type="text" name="search"  id="s" placeholder="Type keyword to search...">
                     <ion-icon class="icon fs-4" name="search-outline"></ion-icon>
-                    <input type="text" id="s" placeholder="Type keyword to search...">
                 </form>
             </div>
 

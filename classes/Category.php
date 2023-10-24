@@ -101,6 +101,7 @@ class Category
         }
     }
 
+
     // Get a Category
     public function getCategory($data)
     {

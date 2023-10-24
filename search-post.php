@@ -3,15 +3,19 @@ $realPath = dirname(__FILE__);
 include_once './inc/head.php';
 include_once $realPath . './classes/Post.php';
 $post = new Post();
-$limit = 4;
-$posts = $post->getAllPost($limit);
 
+if (isset($_GET['search'])) {
+  $keyword = $_GET['search'];
+  $limit = 4;
+  $posts = $post->searchPost($keyword, $limit);
+} else {
+  echo "Please enter a keyword to search.";
 
+}
 
 ?>
 
 <body>
-
   <div class="wrap">
 
     <!-- START navbar -->
@@ -19,44 +23,49 @@ $posts = $post->getAllPost($limit);
     <!-- END navbar -->
 
     <!-- START main content -->
-    <section class="site-section py-sm">
-      <div class="container mt-5">
+    <section class="site-section pt-5">
+      <div class="container">
+
         <div class="row blog-entries">
           <div class="col-md-12 col-lg-8 main-content">
-            <!-- Post start -->
-            <div class="row">
-              <?php
-              if (!empty($posts['data'])):
-                foreach ($posts['data'] as $row):
-                  ?>
-                  <div class="col-md-6 h-100">
-                    <a href="post-details.php?slug=<?php echo $row['slug']; ?>" class="blog-entry element-animate"
-                      data-animate-effect="fadeIn">
-                      <img src="./admin/uploads/post-img/<?php echo $row['image']; ?>" alt="Image placeholder">
-                      <div class="blog-content-body">
-                        <div class="post-meta">
-                          <span class="author mr-2"><img src="images/person_1.jpg" alt="Colorlib">
-                            <?php echo $row['author']; ?>
-                          </span>&bullet;
-                          <span class="mr-2">
-                            <?php echo date('F j, Y', strtotime($row['created_at'])); ?>
-                          </span> &bullet;
-                          <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+            <div class="row mb-5 mt-5">
+              <div class="col-md-12">
+                <?php
+                if (!empty($posts['data'])):
+                  foreach ($posts['data'] as $row):
+                    ?>
+                    <div class="post-entry-horzontal">
+                      <a href="post-details.php?slug=<?php echo $row['slug']; ?>">
+                        <div class="image element-animate" data-animate-effect="fadeIn"
+                          style="background-image: url(./admin/uploads/post-img/<?php echo $row['image']; ?>);">
                         </div>
-                        <h2>
-                          <?php echo Helper::textShorten($row['title'], 65); ?>
-                        </h2>
-                      </div>
-                    </a>
-                  </div>
-                  <?php
-                endforeach;
-              else:
-                echo "No post found";
-              endif;
-              ?>
+                        <span class="text">
+                          <div class="post-meta">
+                            <span class="author mr-2"><img src="images/person_1.jpg" alt="Colorlib">
+                              <?php echo ($row['author']); ?>
+                            </span>&bullet;
+                            <span class="mr-2">
+                              <?php echo date('F j, Y', strtotime($row['updated_at'])); ?>
+                            </span> &bullet;
+                            <span class="mr-2 text-success">
+                              <?php echo ($row['category_name']); ?>
+                            </span>
+                          </div>
+                          <h5>
+                            <?php echo ($row['title']); ?>
+                          </h5>
+                        </span>
+                      </a>
+                    </div>
+                    <?php
+                  endforeach;
+                else:
+                  echo $posts['message'];
+                endif;
+                ?>
+              </div>
             </div>
-            <!-- Post end -->
+
 
             <!-- Pagination -->
             <?php if (!empty($posts['data'])): ?>
@@ -64,18 +73,20 @@ $posts = $post->getAllPost($limit);
                 <div class="col-md-12 text-center">
                   <nav aria-label="Page navigation" class="text-center">
                     <ul class="pagination">
+
                       <!-- Previous page-->
                       <?php if ($posts['page'] == 1): ?>
                         <li class="page-item <?php echo $posts['page'] == 1 ? 'disabled' : ''; ?>"><a class="page-link"
                             href="#">&lt;</a></li>
                       <?php else: ?>
-                        <li class="page-item"><a class="page-link" href="?page=<?php echo $posts['page'] - 1; ?>">&lt;</a>
+                        <li class="page-item"><a class="page-link"
+                            href="?search=<?php echo $keyword; ?>&page=<?php echo $posts['page'] - 1; ?>">&lt;</a>
                         </li>
                       <?php endif; ?>
                       <!-- Current page-->
                       <?php for ($i = 1; $i <= $posts['totalPage']; $i++): ?>
                         <li class="page-item <?php echo $posts['page'] == $i ? 'active' : ''; ?>"><a class="page-link"
-                            href="?page=<?php echo $i; ?>">
+                            href="?search=<?php echo $keyword; ?>&page=<?php echo $i; ?>">
                             <?php echo $i; ?>
                           </a></li>
                       <?php endfor ?>
@@ -84,15 +95,19 @@ $posts = $post->getAllPost($limit);
                         <li class="page-item <?php echo $posts['page'] == $posts['totalPage'] ? 'disabled' : ''; ?>"><a
                             class="page-link" href="#">&gt;</a></li>
                       <?php else: ?>
-                        <li class="page-item "><a class="page-link" href="?page=<?php echo $posts['page'] + 1; ?>">&gt;</a>
+                        <li class="page-item "><a class="page-link"
+                            href="?search=<?php echo $keyword; ?>&page=<?php echo $posts['page'] + 1; ?>">&gt;</a>
                         </li>
                       <?php endif; ?>
+
                     </ul>
                   </nav>
                 </div>
               </div>
             <?php endif; ?>
             <!-- END Pagination -->
+
+
 
           </div>
 

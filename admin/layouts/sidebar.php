@@ -51,5 +51,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <div>Posts</div>
             </a>
         </li>
+        <!-- User -->
+        <li class="menu-item <?php if ($current_page === 'user.php' || $current_page === 'add-user.php' || $current_page === 'edit-user.php')
+            echo 'active'; ?>">
+            <a href="./user.php" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-user"></i>
+                <div>User</div>
+            </a>
+        </li>
     </ul>
 </aside>
