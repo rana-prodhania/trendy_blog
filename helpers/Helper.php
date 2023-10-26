@@ -12,11 +12,12 @@ class Helper
     // Text Shorten
     public static function textShorten($text, $limit)
     {
-        // $text = $text . " ";
-        // $text = substr($text, 0, $limit);
-        // $text = $text . "...";
-        // return $text;
-        return mb_substr($text, 0, $limit, 'UTF-8') . "...";
+        if (mb_strlen($text, 'UTF-8') > $limit) {
+            $text = mb_substr($text, 0, $limit, 'UTF-8');
+            $text = mb_substr($text, 0, mb_strrpos($text, ' ', 0, 'UTF-8'), 'UTF-8');
+            $text .= '...';
+        }
+        return $text;
     }
 
     //  Generate slug

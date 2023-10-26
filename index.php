@@ -1,119 +1,233 @@
 <?php
 $realPath = dirname(__FILE__);
-include_once './inc/head.php';
+include_once './layouts/head.php';
 include_once $realPath . './classes/Post.php';
-$post = new Post();
-$limit = 4;
-$posts = $post->getAllPost($limit);
-
-
-
+include_once $realPath . './../classes/Tag.php';
+$tagObj = new Tag();
+$postObj = new Post();
+$all_tags = $tagObj->getAllTags(4);
+$all_posts = $postObj->getAllPost(4);
+$featured_posts = $postObj->getAllFeaturedPost(2);
 ?>
 
-<body>
-
-  <div class="wrap">
-
-    <!-- START navbar -->
-    <?php include_once('inc/header.php'); ?>
-    <!-- END navbar -->
-
-    <!-- START main content -->
-    <section class="site-section py-sm">
-      <div class="container mt-5">
-        <div class="row blog-entries">
-          <div class="col-md-12 col-lg-8 main-content">
-            <!-- Post start -->
-            <div class="row">
-              <?php
-              if (!empty($posts['data'])):
-                foreach ($posts['data'] as $row):
-                  ?>
-                  <div class="col-md-6 h-100">
-                    <a href="post-details.php?slug=<?php echo $row['slug']; ?>" class="blog-entry element-animate"
-                      data-animate-effect="fadeIn">
-                      <img src="./admin/uploads/post-img/<?php echo $row['image']; ?>" alt="Image placeholder">
-                      <div class="blog-content-body">
-                        <div class="post-meta">
-                          <span class="author mr-2"><img src="images/person_1.jpg" alt="Colorlib">
-                            <?php echo $row['author']; ?>
-                          </span>&bullet;
-                          <span class="mr-2">
-                            <?php echo date('F j, Y', strtotime($row['created_at'])); ?>
-                          </span> &bullet;
-                          <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+<body class="theme-mode">
+    <!-- Start Header -->
+    <?php include_once './layouts/header.php'; ?>
+    <!-- Start Main content -->
+    <main>
+        <div class="container">
+            <div class="hot-tags pt-30 pb-30 font-small align-self-center">
+                <div class="widget-header-3">
+                    <div class="row align-self-center">
+                        <div class="col-md-4 align-self-center">
+                            <h5 class="widget-title">Featured posts</h5>
                         </div>
-                        <h2>
-                          <?php echo Helper::textShorten($row['title'], 65); ?>
-                        </h2>
-                      </div>
-                    </a>
-                  </div>
-                  <?php
-                endforeach;
-              else:
-                echo "No post found";
-              endif;
-              ?>
-            </div>
-            <!-- Post end -->
+                        <div class="col-md-8 text-md-end font-small align-self-center">
+                            <p class="d-inline-block mr-5 mb-0"><i
+                                    class="elegant-icon  icon_tag_alt mr-5 text-muted"></i>Hot tags:</p>
+                            <ul class="list-inline d-inline-block tags">
+                                <!-- tag -->
+                                <?php foreach ($all_tags as $tag): ?>
+                                    <li class="list-inline-item"><a href="#">#
+                                            <?php echo $tag['name']; ?>
+                                        </a></li>
+                                <?php endforeach; ?>
 
-            <!-- Pagination -->
-            <?php if (!empty($posts['data'])): ?>
-              <div class="row mt-5">
-                <div class="col-md-12 text-center">
-                  <nav aria-label="Page navigation" class="text-center">
-                    <ul class="pagination">
-                      <!-- Previous page-->
-                      <?php if ($posts['page'] == 1): ?>
-                        <li class="page-item <?php echo $posts['page'] == 1 ? 'disabled' : ''; ?>"><a class="page-link"
-                            href="#">&lt;</a></li>
-                      <?php else: ?>
-                        <li class="page-item"><a class="page-link" href="?page=<?php echo $posts['page'] - 1; ?>">&lt;</a>
-                        </li>
-                      <?php endif; ?>
-                      <!-- Current page-->
-                      <?php for ($i = 1; $i <= $posts['totalPage']; $i++): ?>
-                        <li class="page-item <?php echo $posts['page'] == $i ? 'active' : ''; ?>"><a class="page-link"
-                            href="?page=<?php echo $i; ?>">
-                            <?php echo $i; ?>
-                          </a></li>
-                      <?php endfor ?>
-                      <!-- Next page-->
-                      <?php if ($posts['page'] == $posts['totalPage']): ?>
-                        <li class="page-item <?php echo $posts['page'] == $posts['totalPage'] ? 'disabled' : ''; ?>"><a
-                            class="page-link" href="#">&gt;</a></li>
-                      <?php else: ?>
-                        <li class="page-item "><a class="page-link" href="?page=<?php echo $posts['page'] + 1; ?>">&gt;</a>
-                        </li>
-                      <?php endif; ?>
-                    </ul>
-                  </nav>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            <?php endif; ?>
-            <!-- END Pagination -->
+            </div>
+            <div class="loop-grid mb-30">
+                <div class="row">
+                    <div class="col-lg-8 mb-30">
+                        <div
+                            class="carausel-post-1 hover-up border-radius-10 overflow-hidden transition-normal position-relative wow fadeInUp animated">
+                            <div class="arrow-cover"></div>
+                            <div class="slide-fade">
+                                <div class="position-relative post-thumb">
+                                    <div class="thumb-overlay img-hover-slide position-relative"
+                                        style="background-image: url(admin/uploads/post-img/<?php echo $featured_posts[0]['image']; ?>)">
+                                        <a class="img-link"
+                                            href="post-details.php?slug=<?php echo $featured_posts[0]['slug']; ?>"></a>
+                                        <div class="post-content-overlay text-white ml-30 mr-30 pb-30">
+                                            <div class="entry-meta meta-0 font-small mb-20">
+                                                <a href="#"><span class="post-cat text-info text-uppercase">
+                                                        <?php echo $featured_posts[0]['category_name']; ?>
+                                                    </span></a>
+                                            </div>
+                                            <h3 class="post-title font-weight-900 mb-20">
+                                                <a class="text-white" href="#">
+                                                    <?php echo $featured_posts[0]['title']; ?>
+                                                </a>
+                                            </h3>
+                                            <div class="entry-meta meta-1 font-small text-white mt-10 pr-5 pl-5">
+                                                <span class="post-on">20 minutes ago</span>
+                                                <span class="hit-count has-dot">23k Views</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-          </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Start Featured post -->
 
-          <!-- END main-content -->
+                    <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="0.2s">
+                        <div class="post-card-1 border-radius-10 hover-up">
+                            <div class="post-thumb thumb-overlay img-hover-slide position-relative"
+                                style="background-image: url(admin/uploads/post-img/<?php echo $featured_posts[1]['image']; ?>)">
+                                <a class="img-link" href="single.html"></a>
 
-          <!-- START sidebar -->
-          <?php include_once './inc/sidebar.php'; ?>
-          <!-- END sidebar -->
+                            </div>
+                            <div class="post-content p-30">
+                                <div class="entry-meta meta-0 font-small mb-10">
+                                    <a href="category-post.php?slug=<?php echo $featured_posts[1]['category_slug']; ?>"><span
+                                            class="post-cat text-info">
+                                            <?php echo $featured_posts[1]['category_name']; ?>
+                                        </span></a>
 
+                                </div>
+                                <div class="d-flex post-card-content">
+                                    <h5 class="post-title mb-20 font-weight-900">
+                                        <a href="single.html">
+                                            <?php echo $featured_posts[1]['title']; ?>
+                                        </a>
+                                    </h5>
+                                    <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                        <span class="post-on">
+                                            <?php echo date('d F', strtotime($featured_posts[1]['created_at'])); ?>
+                                        </span>
+                                        <span class="time-reading has-dot">12 mins read</span>
+                                        <span class="post-by has-dot">23k views</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- End Featured post -->
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
+        <div class="bg-grey pt-50 pb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="post-module-3">
+                            <div class="widget-header-1 position-relative mb-30">
+                                <h5 class="mt-5 mb-30">Latest posts</h5>
+                            </div>
+                            <div class="loop-list loop-list-style-1">
+                                <!-- Start Single Post -->
+                                <?php
+                                if (!empty($all_posts['data'])):
+                                    $color = ['primary', 'secondary', 'success', 'warning', 'info'];
+                                    foreach ($all_posts['data'] as $post):
+                                        ?>
+                                        <article class="hover-up-2 transition-normal wow fadeInUp animated">
+                                            <div class="row mb-40 list-style-2">
+                                                <div class="col-md-4">
+                                                    <div class="post-thumb position-relative border-radius-5">
+                                                        <div class="img-hover-slide border-radius-5 position-relative"
+                                                            style="background-image: url(./admin/uploads/post-img/<?php echo $post['image']; ?>)">
+                                                            <a class="img-link"
+                                                                href="post-details.php?slug=<?php echo $post['slug']; ?>"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 align-self-center">
+                                                    <div class="post-content">
+                                                        <div class="entry-meta meta-0 font-small mb-10">
+                                                            <a
+                                                                href="category-post.php?slug=<?php echo $post['category_slug']; ?>"><span
+                                                                    class="post-cat text-<?php echo $color[array_rand($color)]; ?>">
+                                                                    <?php echo $post['category_name']; ?>
+                                                                </span></a>
+                                                        </div>
+                                                        <h5 class="post-title font-weight-900 mb-20">
+                                                            <a href="post-details.php?slug=<?php echo $post['slug']; ?>">
+                                                                <?php echo $post['title']; ?>
+                                                            </a>
 
-    <!-- START footer -->
-    <?php include_once './inc/footer.php'; ?>
-    <!-- END footer -->
+                                                        </h5>
+                                                        <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                                            <span class="post-on">
+                                                                <?php echo date('d F', strtotime($post['created_at'])); ?>
+                                                            </span>
+                                                            <span class="time-reading has-dot">11 mins read</span>
+                                                            <span class="post-by has-dot">3k views</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+                                        <!-- End Single Post -->
+                                        <?php
+                                    endforeach;
+                                else:
+                                    echo "No post found";
+                                endif;
+                                ?>
 
-  </div>
+                            </div>
+                        </div>
+                        <!-- Start Pagination -->
+                        <?php if (!empty($all_posts['data'])): ?>
+                            <div class="pagination-area mb-30 wow fadeInUp animated">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                        <!-- Previous page-->
+                                        <?php if ($all_posts['page'] == 1): ?>
+                                            <li class="page-item <?php echo $all_posts['page'] == 1 ? 'disabled' : ''; ?>"><a
+                                                    class="page-link" href="#"><i class="elegant-icon arrow_left"></i></a></li>
+                                        <?php else: ?>
+                                            <li class="page-item"><a class="page-link"
+                                                    href="?page=<?php echo $all_posts['page'] - 1; ?>"><i
+                                                        class="elegant-icon arrow_left"></i></a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <!-- Current page-->
+                                        <?php for ($i = 1; $i <= $all_posts['totalPage']; $i++): ?>
+                                            <li class="page-item <?php echo $all_posts['page'] == $i ? 'active' : ''; ?>"><a
+                                                    class="page-link" href="?page=<?php echo $i; ?>">
+                                                    <?php echo $i; ?>
+                                                </a></li>
+                                        <?php endfor ?>
+                                        <!-- Next page-->
+                                        <?php if ($all_posts['page'] == $all_posts['totalPage']): ?>
+                                            <li
+                                                class="page-item <?php echo $all_posts['page'] == $all_posts['totalPage'] ? 'disabled' : ''; ?>">
+                                                <a class="page-link" href="#"><i class="elegant-icon arrow_right"></i></a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item "><a class="page-link"
+                                                    href="?page=<?php echo $all_posts['page'] + 1; ?>"><i
+                                                        class="elegant-icon arrow_right"></i></a>
+                                            </li>
+                                        <?php endif; ?>
 
-  <!-- JavaScript -->
-  <?php include_once './inc/script.php'; ?>
+                                    </ul>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
+                        <!-- End Pagination -->
+                    </div>
+                    <!-- Start Sidebar -->
+                    <?php include './layouts/sidebar.php'; ?>
+                    <!-- End Sidebar -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- End Main content -->
+
+    <!-- Footer Start-->
+    <?php include './layouts/footer.php'; ?>
+    <!-- End Footer -->
+    <!-- Scripts -->
+    <?php include './layouts/scripts.php'; ?>
 </body>
 
 </html>

@@ -107,13 +107,13 @@ class Tag
             return $e->getMessage();
         }
     }
-    // Get all tags
-    public function getAllTags()
+    // Get all tags for frontend
+    public function getAllTags($limit = 4)
     {
         try {
-            $query = "SELECT * FROM tags ORDER BY RAND() LIMIT 10";
-            $statement = $this->db->query($query);
-            return $statement ?? "Category not found!";
+            $query = "SELECT * FROM tags ORDER BY RAND() LIMIT $limit";
+            $statement = $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            return $statement ?? "Tag not found!";
         } catch (PDOException $e) {
             return $e->getMessage();
         }

@@ -157,9 +157,13 @@ class Post
     }
   }
 
-  public function getPostByCategory($id, $limit = 1)
+  // Get Post By Category with Pagination
+  public function getPostByCategory($slug, $limit = 1)
   {
     try {
+      $selectCategoryId = "SELECT id FROM categories WHERE slug = ?";
+      $id = $this->db->query($selectCategoryId, [$slug])->fetchColumn();
+
       $page = isset($_GET['page']) ? $_GET['page'] : 1;
 
       $countQuery = "SELECT COUNT(*) FROM posts WHERE status = 1 AND category_id = ?";
@@ -172,10 +176,10 @@ class Post
       $totalPage = ceil($totalPost / $limit);
       $start = ($page - 1) * $limit;
 
-      $query = "SELECT posts.*, categories.name as category_name, admins.name as author 
+      $query = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name
               FROM posts 
               INNER JOIN categories ON posts.category_id = categories.id 
-              INNER JOIN admins ON posts.admin_id = admins.id 
+              
               WHERE posts.status = 1 
               AND posts.category_id = ?
               ORDER BY posts.id DESC 
@@ -208,10 +212,9 @@ class Post
       $totalPage = ceil($totalPost / $limit);
       $start = ($page - 1) * $limit;
 
-      $query = "SELECT posts.*, categories.name as category_name, admins.name as author 
+      $query = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name, categories.slug as category_slug 
               FROM posts 
               INNER JOIN categories ON posts.category_id = categories.id 
-              INNER JOIN admins ON posts.admin_id = admins.id 
               WHERE posts.status = 1 
               AND (posts.title LIKE :keyword OR posts.description LIKE :keyword) 
               ORDER BY posts.id DESC 
@@ -241,13 +244,13 @@ class Post
       }
 
       $totalPage = ceil($totalPost / $limit);
-      
+
       $start = ($page - 1) * $limit;
 
-      $selectQuery = "SELECT posts.*, categories.name AS category_name, admins.name AS author
+      $selectQuery = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name,  categories.slug as category_slug
             FROM posts
             INNER JOIN categories ON posts.category_id = categories.id
-            INNER JOIN admins ON posts.admin_id = admins.id
+            
             WHERE posts.status = 1
             ORDER BY updated_at DESC LIMIT $start, $limit";
 
@@ -258,6 +261,43 @@ class Post
       return $e->getMessage();
     }
   }
+
+  // Get All Featured Post
+  public function getAllFeaturedPost($limit = 1)
+  {
+    try {
+      $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at, categories.name as category_name, categories.slug as category_slug FROM posts
+              INNER JOIN categories ON posts.category_id = categories.id
+              WHERE posts.status = 1 AND posts.is_featured = 1
+              ORDER BY updated_at DESC LIMIT $limit";
+
+      $posts = $this->db->query($selectQuery)->fetchAll(PDO::FETCH_ASSOC);
+
+      return $posts;
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+
+  // Get All Popular Post
+  public function getAllPopularPost($limit = 3)
+  {
+    try {
+      $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at FROM posts
+              
+              WHERE posts.status = 1
+              ORDER BY RAND() LIMIT $limit";
+
+      $posts = $this->db->query($selectQuery)->fetchAll(PDO::FETCH_ASSOC);
+      if (empty($posts)) {
+        throw new Exception("No post found!");
+      }
+      return $posts;
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+
 
   // Delete Post
   public function deletePost($id)
