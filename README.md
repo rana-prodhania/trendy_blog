@@ -22,4 +22,4 @@ My PHP personal blog site, It offers the following common functionalities:
 - Bootstrap for styling
 - Toastr & SweetAlert2
 ## Demo
-Check out the live demo of this project [here]([https://your-demo-url.com/](https://trandy-blog.000webhostapp.com/index.php)https://trandy-blog.000webhostapp.com/index.php).
+Check out the live demo of this project [here](https://trandy-blog.000webhostapp.com/index.php).
