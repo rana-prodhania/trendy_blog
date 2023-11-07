@@ -1,7 +1,7 @@
 <?php
+$title = "Categories";
 include_once './layouts/head.php';
 include_once './layouts/custom-css.php';
-include_once '../classes/Category.php';
 
 $category = new Category();
 $categories = $category->getAllCategories();
@@ -98,10 +98,6 @@ if (isset($_GET['id'])) {
               </div>
             </div>
           </div>
-
-          <!-- Content -->
-
-          <!-- / Content -->
         </div>
       </div>
       <!-- / Layout page -->

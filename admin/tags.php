@@ -1,7 +1,7 @@
 <?php
+$title = "All Tags";
 include_once './layouts/head.php';
 include_once './layouts/custom-css.php';
-include_once '../classes/Tag.php';
 
 $tag = new Tag();
 $tags = $tag->getAllTagsAdmin();
@@ -96,10 +96,6 @@ if (isset($_GET['id'])) {
               </div>
             </div>
           </div>
-
-          <!-- Content -->
-
-          <!-- / Content -->
         </div>
       </div>
       <!-- / Layout page -->

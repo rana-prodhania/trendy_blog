@@ -7,7 +7,6 @@ class Post
 {
   private $db;
   private $helper;
-
   public $error = [];
 
   public function __construct()
@@ -23,18 +22,21 @@ class Post
       $admin_id = $_SESSION['id'];
       $title = $this->helper->sanitize($data['post-title']);
       $category_id = $data['category-id'] ?? "";
+      $tags = $data['tags'] ?? [];
       $image = $files['post-image'];
       $description = $data['description'];
+      $is_featured = $data['feature-post'];
       $status = $data['status'];
 
-      if (empty($title) || empty($category_id) || empty($image) || empty($description)) {
-        throw new Exception("All fields are required!");
-      }
+      $this->validateField($title, 'title', 'Title is required!');
+      $this->validateField($category_id, 'category', 'Category is required!');
+      $this->validateField($image['name'], 'image', 'Image is required!');
+      $this->validateField($description, 'description', 'Description is required!');
 
       $slug = $this->helper->generateSlug($title);
-      $image = $this->uploadImage($image);
+      $image = $this->helper->uploadImage($image, null, "uploads/post-img/");
 
-      $query = "INSERT INTO posts (title, category_id, image, description, status, admin_id, slug) VALUES (:title, :category_id, :image, :description, :status, :admin_id, :slug)";
+      $query = "INSERT INTO posts (title, category_id, image, description, status, admin_id, slug, is_featured) VALUES (:title, :category_id, :image, :description, :status, :admin_id, :slug, :is_featured)";
       $params = [
         ':title' => $title,
         ':category_id' => $category_id,
@@ -42,10 +44,13 @@ class Post
         ':description' => $description,
         ':status' => $status,
         ':admin_id' => $admin_id,
-        ':slug' => $slug
+        ':slug' => $slug,
+        ':is_featured' => $is_featured,
       ];
 
       $result = $this->db->query($query, $params);
+      $id = $this->db->getLastInsertedId();
+      $this->insertPostTags($tags, $id);
       if (!$result) {
         throw new Exception("Post addition failed!");
       }
@@ -56,6 +61,8 @@ class Post
       return $e->getMessage();
     }
   }
+
+
   // Update Post
   public function updatePost($data, $files)
   {
@@ -64,10 +71,16 @@ class Post
       $admin_id = $_SESSION['id'];
       $title = $this->helper->sanitize($data['post-title']);
       $category_id = $data['category-id'] ?? "";
+      $tags = $data['tags'] ?? [];
       $image = $files['post-image'];
       $oldImage = $data['old-image'];
       $description = $data['description'];
+      $is_featured = $data['feature-post'];
       $status = $data['status'];
+
+      $this->validateField($title, 'title', 'Title is required!');
+      $this->validateField($category_id, 'category', 'Category is required!');
+      $this->validateField($description, 'description', 'Description is required!');
 
       // Check if a new image is provided
       if (isset($files['post-image']['name']) && !empty($files['post-image']['name'])) {
@@ -78,22 +91,17 @@ class Post
         // Delete the old image
         if (file_exists($oldImage)) {
           unlink($oldImage);
-
-          // Upload the new image
-          $image = $this->uploadImage($image);
         }
+
+        // Upload the new image
+        $image = $this->helper->uploadImage($image, $oldImage, "uploads/post-img/");
       } else {
         $image = $oldImage;
       }
 
-      if (empty($title) || empty($category_id) || empty($description)) {
-        throw new Exception("All fields are required!");
-      }
-
       $slug = $this->helper->generateSlug($title);
 
-
-      $query = "UPDATE posts SET title = :title, category_id = :category_id, image = :image, description = :description, status = :status, admin_id = :admin_id, slug = :slug WHERE id = :id";
+      $query = "UPDATE posts SET title = :title, category_id = :category_id, image = :image, description = :description, status = :status, admin_id = :admin_id, slug = :slug, is_featured = :is_featured WHERE id = :id";
       $params = [
         ':title' => $title,
         ':category_id' => $category_id,
@@ -102,10 +110,13 @@ class Post
         ':status' => $status,
         ':admin_id' => $admin_id,
         ':slug' => $slug,
-        ':id' => $id
+        ':id' => $id,
+        ':is_featured' => $is_featured
       ];
-
       $result = $this->db->query($query, $params);
+      $this->deleteOldPostTags($id);
+      $this->insertPostTags($tags, $id);
+
       if (!$result) {
         throw new Exception("Post addition failed!");
       }
@@ -134,7 +145,6 @@ class Post
   public function getPostAdmin($id)
   {
     try {
-      // join table posts and categories,admin to get category name and admin name
       $query = "SELECT posts.*, categories.name as category_name, admins.name as author FROM posts INNER JOIN categories ON posts.category_id = categories.id INNER JOIN admins ON posts.admin_id = admins.id WHERE posts.id = ?";
 
       $statement = $this->db->query($query, [$id]);
@@ -147,8 +157,7 @@ class Post
   public function getPost($slug)
   {
     try {
-      // join table posts and categories,admin to get category name and admin name
-      $query = "SELECT posts.*, categories.name as category_name, admins.name as author FROM posts INNER JOIN categories ON posts.category_id = categories.id INNER JOIN admins ON posts.admin_id = admins.id WHERE posts.slug = ? ";
+      $query = "SELECT posts.*, categories.name as category_name, admins.name as author, admins.avatar as admin_profile FROM posts INNER JOIN categories ON posts.category_id = categories.id INNER JOIN admins ON posts.admin_id = admins.id WHERE posts.slug = ? ";
 
       $statement = $this->db->query($query, [$slug]);
       return $statement->fetch(PDO::FETCH_ASSOC);
@@ -170,7 +179,7 @@ class Post
       $totalPost = $this->db->query($countQuery, [$id])->fetchColumn();
 
       if (!$totalPost) {
-        return ['totalPage' => 0, 'data' => [], 'page' => $page, 'message' => 'No post found in this category!'];
+        return ['totalPage' => 0, 'data' => [], 'page' => $page, 'message' => 'No post found!'];
       }
 
       $totalPage = ceil($totalPost / $limit);
@@ -192,6 +201,43 @@ class Post
       return $e->getMessage();
     }
   }
+  // Get Post By Tag with Pagination
+  public function getPostByTag($tag, $limit = 1)
+  {
+    try {
+      $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+      $countQuery = "SELECT COUNT(*) FROM posts 
+                    INNER JOIN post_tags ON posts.id = post_tags.post_id 
+                    INNER JOIN tags ON post_tags.tag_id = tags.id 
+                    WHERE posts.status = 1 AND tags.name = ?";
+      $totalPost = $this->db->query($countQuery, [$tag])->fetchColumn();
+
+      if (!$totalPost) {
+        return ['totalPage' => 0, 'data' => [], 'page' => $page, 'message' => 'No post found!'];
+      }
+
+      $totalPage = ceil($totalPost / $limit);
+      $start = ($page - 1) * $limit;
+
+      $query = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name
+                FROM posts 
+                INNER JOIN post_tags ON posts.id = post_tags.post_id 
+                INNER JOIN tags ON post_tags.tag_id = tags.id 
+                INNER JOIN categories ON posts.category_id = categories.id 
+                WHERE posts.status = 1 
+                AND tags.name = ?
+                ORDER BY posts.id DESC 
+                LIMIT $start, $limit";
+
+      $posts = $this->db->query($query, [$tag])->fetchAll(PDO::FETCH_ASSOC);
+
+      return ['totalPage' => $totalPage, 'data' => $posts, 'page' => $page];
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+  
 
 
 
@@ -298,6 +344,22 @@ class Post
     }
   }
 
+  // Related Post by category
+  public function getRelatedPosts($category_id,$currentPostSlug,$limit = 3)
+  {
+    try {
+      $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at, categories.name as category_name FROM posts
+                INNER JOIN categories ON posts.category_id = categories.id
+                WHERE posts.status = 1 AND posts.category_id = ? AND posts.slug != ?
+                ORDER BY RAND() LIMIT $limit";
+
+      $posts = $this->db->query($selectQuery, [$category_id, $currentPostSlug])->fetchAll(PDO::FETCH_ASSOC);
+      return $posts;
+    } catch (PDOException $e) {
+      return $e->getMessage();
+    }
+  }
+
 
   // Delete Post
   public function deletePost($id)
@@ -324,38 +386,40 @@ class Post
     }
   }
 
-  // Upload Image
-  public function uploadImage($image, $previousImage = null)
+  // Insert Post Tags
+  private function insertPostTags($tags, $id)
   {
-    $image_name = $image['name'];
-    $image_temp = $image['tmp_name'];
-    $image_error = $image['error'];
+    if ($tags) {
+      foreach ($tags as $key => $tag) {
+        $sql = "INSERT INTO post_tags (post_id,tag_id)VALUES(:post_id,:tag_id)";
+        $result = $this->db->query($sql, [
+          ':post_id' => $id,
+          ':tag_id' => $tags[$key],
+        ]);
 
-    if ($image_error !== 0) {
-      return 'Error: File upload error: ' . $image_error;
+        if (!$result) {
+          throw new Exception("Tag insertion failed!");
+        }
+      }
+    }
+  }
+  // Delete Old Post Tags
+  private function deleteOldPostTags($id)
+  {
+    $query = "DELETE FROM post_tags WHERE post_id = ?";
+    $result = $this->db->query($query, [$id]);
+    if (!$result) {
+      throw new Exception("Deleting old post tags failed!");
     }
 
-    $allowed_exs = array('jpg', 'jpeg', 'png', 'webp');
-    $image_ex = pathinfo($image_name, PATHINFO_EXTENSION);
-    $image_ex_lc = strtolower($image_ex);
-
-    if (!in_array($image_ex_lc, $allowed_exs)) {
-      return 'Error: Invalid file type';
-    }
-
-    $image_new_name = uniqid('IMG-', true) . '.' . $image_ex_lc;
-    $image_upload_path = 'uploads/post-img/' . $image_new_name;
-
-    if (!move_uploaded_file($image_temp, $image_upload_path)) {
-      return 'Error: Failed to move the uploaded file';
-    }
-
-    // If a previous image path is provided, delete the previous image.
-    if ($previousImage && file_exists($previousImage)) {
-      unlink($previousImage);
-    }
-
-    return $image_new_name;
   }
 
+  // Validate Field
+  private function validateField($field, $errorKey, $errorMessage)
+  {
+    if (empty($field)) {
+      $this->error[$errorKey] = $errorMessage;
+      throw new Exception($errorMessage);
+    }
+  }
 }

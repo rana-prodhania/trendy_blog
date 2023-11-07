@@ -74,6 +74,9 @@ class Tag
                 throw new Exception("Tag name is required!");
             }
 
+            // Validate name
+            $this->helper->validateName($name);
+
             // Generate slug
             $slug = $this->helper->generateSlug($name);
 
@@ -150,7 +153,7 @@ class Tag
 
     }
 
-    // // Check if category exists
+    // Check if category exists
     private function doesTagExist($slug)
     {
         try {
@@ -161,4 +164,16 @@ class Tag
             return $e->getMessage();
         }
     }
+    // Get all tags from a post
+    public function getAllTagsFromPost($postId)
+    {
+        try {
+            $query = "SELECT * FROM tags INNER JOIN post_tags ON tags.id = post_tags.tag_id WHERE post_id=?";
+            $result = $this->db->query($query, [$postId])->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
 }

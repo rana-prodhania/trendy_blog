@@ -4,6 +4,10 @@ if(!isset($_SESSION['id'])) {
   header('Location: index.php');
   exit();
 }
+// $realPath = dirname(__FILE__);
+spl_autoload_register(function ($className) {
+    include_once './../classes/' . $className . '.php';
+});
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +17,7 @@ if(!isset($_SESSION['id'])) {
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-  <title>Trendy Blog</title>
+  <title><?php echo $title??'Admin Dashboard'; ?> - Trendy Blog </title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">

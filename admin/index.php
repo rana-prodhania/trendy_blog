@@ -1,4 +1,5 @@
 <?php
+$title = "Admin Login";
 include_once '../classes/Login.php';
 $login = new Login();
 

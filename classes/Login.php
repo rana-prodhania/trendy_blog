@@ -15,6 +15,7 @@ class Login
         session_start();
     }
 
+    // Login
     public function login($data)
     {
         $email = $this->helper->sanitize($data['email']);
@@ -42,6 +43,7 @@ class Login
             if (password_verify($password, $result['password'])) {
                 $_SESSION['id'] = $result['id'];
                 $_SESSION['name'] = $result['name'];
+                $_SESSION['avatar'] = $result['avatar'];
                 header('Location: dashboard.php');
                 exit();
             } else {

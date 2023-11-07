@@ -1,11 +1,9 @@
 <?php
-$realPath = dirname(__FILE__);
 include_once './layouts/head.php';
-include_once $realPath . './classes/Post.php';
 $postObj = new Post();
 if (isset($_GET['slug'])) {
  $slug = $_GET['slug'];
- $categoryPosts = $postObj->getPostByCategory($slug, 4);
+ $categoryPosts = $postObj->getPostByCategory($slug, $pagination);
 }
 ?>
 
@@ -18,14 +16,15 @@ if (isset($_GET['slug'])) {
   <!--archive header-->
   <div class="archive-header pt-50">
    <div class="container">
-    <h2 class="font-weight-900"><?php echo $categoryPosts['data'][0]['category_name']; ?></h2>
+    <h2 class="font-weight-900"><?php echo $categoryPosts['data'][0]['category_name']?? $slug; ?></h2>
     <div class="breadcrumb">
      <a href="index.html" rel="nofollow">Category</a>
-     <span></span> <?php echo $categoryPosts['data'][0]['category_name']; ?>
+     <span></span> <?php echo $categoryPosts['data'][0]['category_name']?? $slug; ?>
     </div>
     <div class="bt-1 border-color-1 mt-30 mb-50"></div>
    </div>
   </div>
+  <!-- end archive header-->
   <div class="pb-50">
    <div class="container">
     <div class="row">
@@ -65,8 +64,8 @@ if (isset($_GET['slug'])) {
                <span class="post-on">
                 <?php echo date('d F', strtotime($post['created_at'])); ?>
                </span>
-               <span class="time-reading has-dot">11 mins read</span>
-               <span class="post-by has-dot">3k views</span>
+               <span class="time-reading has-dot">1 mins read</span>
+               <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
               </div>
              </div>
             </div>
@@ -92,14 +91,14 @@ if (isset($_GET['slug'])) {
              href="#"><i class="elegant-icon arrow_left"></i></a></li>
           <?php else: ?>
            <li class="page-item"><a class="page-link"
-             href="?id=<?php echo $keyword; ?>&page=<?php echo $categoryPosts['page'] - 1; ?>"><i
+             href="?slug=<?php echo $_GET['slug']; ?>&page=<?php echo $categoryPosts['page'] - 1; ?>"><i
               class="elegant-icon arrow_left"></i></a>
            </li>
           <?php endif; ?>
           <!-- Current page-->
           <?php for ($i = 1; $i <= $categoryPosts['totalPage']; $i++): ?>
            <li class="page-item <?php echo $categoryPosts['page'] == $i ? 'active' : ''; ?>"><a class="page-link"
-             href="?id=<?php echo $keyword; ?>&page=<?php echo $i; ?>">
+             href="?slug=<?php echo $_GET['slug']; ?>&page=<?php echo $i; ?>">
              <?php echo $i; ?>
             </a></li>
           <?php endfor ?>
@@ -110,7 +109,7 @@ if (isset($_GET['slug'])) {
            </li>
           <?php else: ?>
            <li class="page-item "><a class="page-link"
-             href="?id=<?php echo $keyword; ?>&page=<?php echo $categoryPosts['page'] + 1; ?>"><i
+             href="?slug=<?php echo $_GET['slug']; ?>&page=<?php echo $categoryPosts['page'] + 1; ?>"><i
               class="elegant-icon arrow_right"></i></a>
            </li>
           <?php endif; ?>

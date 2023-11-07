@@ -1,10 +1,9 @@
 <?php
 include_once './layouts/head.php';
 $postObj = new Post();
-
-if (isset($_GET['search'])) {
- $keyword = $_GET['search'];
- $searchPosts = $postObj->searchPost($keyword, $pagination);
+if (isset($_GET['name'])) {
+ $name = $_GET['name'];
+ $categoryPosts = $postObj->getPostByTag($name, $pagination);
 }
 ?>
 
@@ -17,10 +16,10 @@ if (isset($_GET['search'])) {
   <!--archive header-->
   <div class="archive-header pt-50">
    <div class="container">
-    <h2 class="font-weight-900">Search results for '<?php echo $keyword; ?>'</h2>
+    <h2 class="font-weight-900">#<?php echo $categoryPosts['data'][0]['name']?? $name; ?></h2>
     <div class="breadcrumb">
-     <a href="index.html" rel="nofollow">Home</a>
-     <span></span>Search results
+     <a href="index.html" rel="nofollow">Tag</a>
+     <span></span>#<?php echo $categoryPosts['data'][0]['name']?? $name; ?>
     </div>
     <div class="bt-1 border-color-1 mt-30 mb-50"></div>
    </div>
@@ -33,9 +32,8 @@ if (isset($_GET['search'])) {
        <div class="loop-list loop-list-style-1">
         <!-- Start Single Post -->
         <?php
-        if (!empty($searchPosts['data'])):
-         $color = ['primary', 'secondary', 'success', 'warning', 'info'];
-         foreach ($searchPosts['data'] as $post):
+        if (!empty($categoryPosts['data'])):
+         foreach ($categoryPosts['data'] as $post):
           ?>
           <article class="hover-up-2 transition-normal wow fadeInUp animated">
            <div class="row mb-40 list-style-2">
@@ -51,7 +49,7 @@ if (isset($_GET['search'])) {
             <div class="col-md-8 align-self-center">
              <div class="post-content">
               <div class="entry-meta meta-0 font-small mb-10">
-               <a href="category-post.php?slug=<?php echo $post['category_slug']; ?>"><span class="post-cat text-<?php echo $color[array_rand($color)]; ?>">
+               <a href="category.html"><span class="post-cat text-primary">
                  <?php echo $post['category_name']; ?>
                 </span></a>
               </div>
@@ -75,40 +73,42 @@ if (isset($_GET['search'])) {
           <?php
          endforeach;
         else:
-         echo $searchPosts['message'];
+         echo $categoryPosts['message'];
         endif;
         ?>
         <!-- End Single Post -->
        </div>
       </div>
       <!-- Start Pagination -->
-      <?php if (!empty($searchPosts['data'])): ?>
+      <?php if (!empty($categoryPosts['data'])): ?>
        <div class="pagination-area mb-30 wow fadeInUp animated">
         <nav aria-label="Page navigation example">
          <ul class="pagination justify-content-start">
           <!-- Previous page-->
-          <?php if ($searchPosts['page'] == 1): ?>
-           <li class="page-item <?php echo $searchPosts['page'] == 1 ? 'disabled' : ''; ?>"><a class="page-link" href="#"><i
-              class="elegant-icon arrow_left"></i></a></li>
+          <?php if ($categoryPosts['page'] == 1): ?>
+           <li class="page-item <?php echo $categoryPosts['page'] == 1 ? 'disabled' : ''; ?>"><a class="page-link"
+             href="#"><i class="elegant-icon arrow_left"></i></a></li>
           <?php else: ?>
-           <li class="page-item"><a class="page-link" href="?search=<?php echo $keyword; ?>&page=<?php echo $searchPosts['page'] - 1; ?>"><i
+           <li class="page-item"><a class="page-link"
+             href="?name=<?php echo $_GET['name']; ?>&page=<?php echo $categoryPosts['page'] - 1; ?>"><i
               class="elegant-icon arrow_left"></i></a>
            </li>
           <?php endif; ?>
           <!-- Current page-->
-          <?php for ($i = 1; $i <= $searchPosts['totalPage']; $i++): ?>
-           <li class="page-item <?php echo $searchPosts['page'] == $i ? 'active' : ''; ?>"><a class="page-link"
-             href="?search=<?php echo $keyword; ?>&page=<?php echo $i; ?>">
+          <?php for ($i = 1; $i <= $categoryPosts['totalPage']; $i++): ?>
+           <li class="page-item <?php echo $categoryPosts['page'] == $i ? 'active' : ''; ?>"><a class="page-link"
+             href="?name=<?php echo $_GET['name']; ?>&page=<?php echo $i; ?>">
              <?php echo $i; ?>
             </a></li>
           <?php endfor ?>
           <!-- Next page-->
-          <?php if ($searchPosts['page'] == $searchPosts['totalPage']): ?>
-           <li class="page-item <?php echo $searchPosts['page'] == $searchPosts['totalPage'] ? 'disabled' : ''; ?>">
+          <?php if ($categoryPosts['page'] == $categoryPosts['totalPage']): ?>
+           <li class="page-item <?php echo $categoryPosts['page'] == $categoryPosts['totalPage'] ? 'disabled' : ''; ?>">
             <a class="page-link" href="#"><i class="elegant-icon arrow_right"></i></a>
            </li>
           <?php else: ?>
-           <li class="page-item "><a class="page-link" href="?search=<?php echo $keyword; ?>&page=<?php echo $searchPosts['page'] + 1; ?>"><i
+           <li class="page-item "><a class="page-link"
+             href="?name=<?php echo $_GET['name']; ?>&page=<?php echo $categoryPosts['page'] + 1; ?>"><i
               class="elegant-icon arrow_right"></i></a>
            </li>
           <?php endif; ?>

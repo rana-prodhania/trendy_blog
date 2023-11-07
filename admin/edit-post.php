@@ -1,22 +1,23 @@
 <?php
+$title = "Edit Post";
 include_once './layouts/head.php';
-include_once '../classes/Post.php';
-include_once '../classes/Category.php';
-include_once '../classes/Tag.php';
 
-$post = new Post();
-$category = new Category();
-$tag = new Tag();
-$categories = $category->getAllCategories();
-$tags = $tag->getAllTagsAdmin();
+$postObj = new Post();
+$categoryObj = new Category();
+$tagObj = new Tag();
 
-if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-  $result1 = $post->getPostAdmin($id);
+$categories = $categoryObj->getAllCategories();
+$tags = $tagObj->getAllTagsAdmin();
+
+$id = $_GET['id'] ?? null;
+
+if ($id) {
+  $post = $postObj->getPostAdmin($id);
+  $postTags = $tagObj->getAllTagsFromPost($id);
 }
 
-if (isset($_POST['submit'])) {
-  $result = $post->updatePost($_POST, $_FILES);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $result = $postObj->updatePost($_POST, $_FILES);
 }
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" />
@@ -54,8 +55,6 @@ if (isset($_POST['submit'])) {
                   </div>
                 <?php } ?>
                 <!-- / Error Alert -->
-
-                <!-- Register -->
                 <div class="card mb-4">
                   <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="mb-0">Edit Post</h5>
@@ -63,14 +62,14 @@ if (isset($_POST['submit'])) {
                   </div>
                   <div class="card-body">
                     <form action="" method="POST" enctype="multipart/form-data">
-                      <input type="hidden" name="post-id" value="<?php echo $result1['id']; ?>" />
+                      <input type="hidden" name="post-id" value="<?php echo $post['id']; ?>" />
                       <div class="row mb-3">
                         <div class="col-sm-2">
                           <label for="validationCustom03" class="form-label">Post Title</label>
                         </div>
                         <div class="col-sm-10">
                           <input type="text" class="form-control" name="post-title"
-                            value="<?php echo $result1['title']; ?>" id="validationCustom03" placeholder="Post title" />
+                            value="<?php echo $post['title']; ?>" id="validationCustom03" placeholder="Post title" />
 
                         </div>
                       </div>
@@ -79,10 +78,10 @@ if (isset($_POST['submit'])) {
                           <label for="defaultSelect" class="form-label">Choose Category</label>
                         </div>
                         <div class="col-sm-10">
-                          <select id="defaultSelect" name="category-id" class="form-select select2"
+                          <select id="defaultSelect" name="category-id" class="form-select select2" id="select1"
                             aria-label="Default select example">
-                            <?php foreach ($categories as $category):?>
-                              <option <?php echo $result1['category_id'] == $category['id'] ? 'selected' : '';?>
+                            <?php foreach ($categories as $category): ?>
+                              <option <?php echo $post['category_id'] == $category['id'] ? 'selected' : ''; ?>
                                 value="<?php echo $category['id']; ?>">
                                 <?php echo $category['name']; ?>
                               </option>
@@ -95,10 +94,10 @@ if (isset($_POST['submit'])) {
                           <label for="formFile" class="form-label">Post Image</label>
                         </div>
                         <div class="col-sm-10">
-                          <input data-default-file="uploads/post-img/<?php echo $result1['image']; ?>" data-height="300" data-max-file-size="1M"
-                            data-allowed-file-extensions="jpg jpeg png webp" class="form-control dropify"
-                            name="post-image" type="file" id="formFile">
-                            <input type="hidden" name="old-image" value="<?php echo $result1['image']; ?>" />
+                          <input data-default-file="uploads/post-img/<?php echo $post['image']; ?>" data-height="300"
+                            data-max-file-size="1M" data-allowed-file-extensions="jpg jpeg png webp"
+                            class="form-control dropify" name="post-image" type="file" id="formFile">
+                          <input type="hidden" name="old-image" value="<?php echo $post['image']; ?>" />
                         </div>
                       </div>
                       <div class="row mb-3">
@@ -106,7 +105,49 @@ if (isset($_POST['submit'])) {
                           <label class="form-label">Post Description</label>
                         </div>
                         <div class="col-sm-10 h-100">
-                          <textarea name="description" id="description" cols="30" rows="10"><?php echo $result1['description'];?></textarea>
+                          <textarea name="description" id="description" cols="30"
+                            rows="10"><?php echo $post['description']; ?></textarea>
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-2">
+                          <label for="defaultSelect" class="form-label">Choose Tags</label>
+                        </div>
+                        <div class="col-sm-10">
+                          <select id="defaultSelect" name="tags[]" multiple="multiple" class="form-select select2"
+                            aria-label="Default select example">
+                            <?php foreach ($tags as $tag): 
+                              foreach ($postTags as $postTag) {
+                                if ($tag['id'] == $postTag['tag_id']) {
+                                  $tag['selected'] = 'selected';
+                                }
+                              }
+                              ?>
+                              <option value="<?php echo $tag['id']; ?>" <?php echo $tag['selected']??'' ?>>
+                                <?php echo $tag['name']; ?>
+                              </option>
+                            <?php endforeach; ?>
+                          </select>
+                          <span class="text-danger">
+                            <?php echo $postObj->error['tag'] ?? '' ?>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-sm-2">
+                          <label id="feature-post" class="form-label">Feature Post</label>
+                        </div>
+                        <div class="col-sm-10">
+                          <select id="feature-post" name="feature-post" class="form-select">
+                            <?php if ($post['is_featured'] == 1): ?>
+                              <option value="1" selected>Yes</option>
+                              <option value="0">No</option>
+                            <?php else: ?>
+                              <option value="1">Yes</option>
+                              <option value="0" selected>No</option>
+                            <?php endif; ?>
+                          </select>
                         </div>
                       </div>
 
@@ -117,7 +158,7 @@ if (isset($_POST['submit'])) {
                         <div class="col-sm-10">
                           <select id="post-status" name="status" class="form-select">
                             <option selected disabled>Select Post Status</option>
-                            <?php if ($result1['status'] == 1): ?>
+                            <?php if ($post['status'] == 1): ?>
                               <option value="1" selected>Publish</option>
                               <option value="0">Draft</option>
                             <?php else: ?>
@@ -165,6 +206,7 @@ if (isset($_POST['submit'])) {
         });
       $('.dropify').dropify();
       $('.select2').select2();
+      $('#select1').select2();
       const input = document.querySelector('input[name=tag-name]');
       new Tagify(input);
 

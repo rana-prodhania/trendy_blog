@@ -1,15 +1,16 @@
 <?php
-$title = "All Posts";
+$title = "Contact Page";
 include_once './layouts/head.php';
 include_once './layouts/custom-css.php';
 
-$post = new Post();
-$posts = $post->getAllPostAdmin();
+$contactObj = new Page();
+$contacts = $contactObj->getAllContactMessages();
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
-  $result = $post->deletePost($id);
-}
+  $contactObj->deleteContactMessage($id);
+ }
 ?>
+
 </head>
 
 <body>
@@ -44,62 +45,44 @@ if (isset($_GET['id'])) {
                   <div class="card-header px-0 m-0 d-flex justify-content-between">
                     <div class="head-label">
                       <h5 class="card-title mb-0">
-                        List of Posts
+                        List of Contact Messages
                       </h5>
-                    </div>
-                    <div>
-                      <a href="add-post.php"><button type="button" class="btn btn-primary">
-                          Add Post
-                        </button></a>
                     </div>
                   </div>
                   <table id="example" class="table table-striped" style="width: 100%">
                     <thead>
                       <tr>
-                        <th >S/N</th>
-                        <th>Post title</th>
-                        <th>Category</th>
-                        <th>Status</th>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
                         <th class="text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
-                      if ($posts) {
+                      if ($contacts) {
                         $i = 1;
-                        while ($row = $posts->fetch(PDO::FETCH_ASSOC)) { ?>
+                        while ($row = $contacts->fetch(PDO::FETCH_ASSOC)) { ?>
                           <tr>
                             <td>
                               <?php echo $i++; ?>
                             </td>
                             <td>
-                              <?php echo Helper::textShorten($row['title'], 40) ?>
+                              <?php echo $row['name']; ?>
                             </td>
                             <td>
-                              <?php echo $row['category_name']; ?>
+                              <?php echo $row['email']; ?>
                             </td>
                             <td>
-                              <?php
-                              $status = $row['status'];
-                              $badgeClass = ($status == 1) ? 'success' : 'danger';
-                              $badgeText = ($status == 1) ? 'Published' : 'Draft';
-                              ?>
-
-                              <span class="badge rounded-pill bg-<?php echo $badgeClass; ?>">
-                                <?php echo $badgeText; ?>
-                              </span>
+                              <?php echo Helper::textShorten($row['message'], 20); ?>
                             </td>
                             <td class="text-center">
 
                               <a
-                                class="btn btn-sm btn-outline-info" href="post-details.php?id=<?php echo $row['id']; ?>"><i class=" fs-5 bx bx-glasses"></i></a>
-                              <a class="btn btn-sm btn-outline-primary"
-                                href="edit-post.php?id=<?php echo $row['id']; ?>">
-                                <i class="fs-5 bx bx-edit"></i>
-                              </a>
+                                class="btn btn-sm btn-outline-info" href="contact-details.php?id=<?php echo $row['id']; ?>"><i class=" fs-5 bx bx-glasses"></i></a>
                               <a class="btn btn-sm btn-outline-danger btn-delete" href="?id=<?php echo $row['id']; ?>"><i
                                   class="fs-5 bx bx-trash"></i></a>
-
                             </td>
                           </tr>
                           <?php
@@ -119,7 +102,7 @@ if (isset($_GET['id'])) {
   </div>
 
   <!-- JavaScript -->
-  <?php
+  <?php 
   include_once './layouts/script.php';
   include_once './layouts/custom-script.php';
   // check for success message 

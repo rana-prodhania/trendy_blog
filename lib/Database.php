@@ -34,6 +34,13 @@ class  Database
         }
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
+        
         return $stmt;
+    }
+    
+    // Get the last inserted ID
+    public function getLastInsertedId()
+    {
+        return $this->conn->lastInsertId();
     }
 }

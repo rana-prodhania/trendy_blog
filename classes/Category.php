@@ -93,7 +93,7 @@ class Category
     public function getAllCategories()
     {
         try {
-            $query = "SELECT * FROM categories ORDER BY id DESC";
+            $query = "SELECT * FROM categories ORDER BY id DESC ";
             $statement = $this->db->query($query);
             return $statement ?? "Category not found!";
         } catch (PDOException $e) {

@@ -1,5 +1,5 @@
 <?php
-$popular_posts = $postObj->getAllPopularPost(3);
+$popular_posts = $postObj->getAllPopularPost($setting['pop_per_page']);
 ?>
 <div class="col-lg-4">
  <div class="widget-area">
@@ -23,7 +23,7 @@ $popular_posts = $postObj->getAllPopularPost(3);
           <span class="post-on">
            <?php echo date('d F', strtotime($post['created_at'])); ?>
           </span>
-          <span class="post-by has-dot">150 views</span>
+          <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
          </div>
         </div>
         <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
@@ -37,18 +37,6 @@ $popular_posts = $postObj->getAllPopularPost(3);
      <!-- End Single Post -->
     </ul>
    </div>
-   <!-- <div class="widget-header-1 position-relative">
-    <h5 class="mt-5 mb-10">Categories</h5>
-   </div>
-   <div class="post-block-list post-module-1 ">
-    <ul class="list-post ">
-     <li class="wow fadeInUp animated" ><a href="#">Food</a></li>
-     <li><a href="#">Travel <span>(22)</span></a></li>
-     <li><a href="#">Lifestyle <span>(37)</span></a></li>
-     <li><a href="#">Business <span>(42)</span></a></li>
-     <li><a href="#">Adventure <span>(14)</span></a></li>
-    </ul>
-   </div> -->
   </div>
  </div>
 

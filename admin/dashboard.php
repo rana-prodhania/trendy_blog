@@ -1,4 +1,12 @@
-<?php include_once './layouts/head.php'; ?>
+<?php
+$title = "Dashboard";
+include_once './layouts/head.php';
+$dashboard = new Dashboard();
+$allPostCount = $dashboard->getAllPostCount();
+$allDraftPostCount = $dashboard->getAllDraftPostCount();
+$allPublishedPostCount = $dashboard->getAllPublishedPostCount();
+$allCategoryCount = $dashboard->getAllCategoryCount(); 
+?>
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
   <div class="layout-container">
@@ -16,78 +24,56 @@
         <!-- Content -->
         <div class="container-xxl flex-grow-1 container-p-y">
           <div class="row">
-            <div class="col-md-4 col-6 mb-4">
-              <div class="card h-100">
+            <div class="col-sm-6 col-lg-3 mb-4">
+              <div class="card card-border-shadow-primary h-100">
                 <div class="card-body">
-                  <div class="card-title d-flex align-items-start justify-content-between">
-                    <div class="avatar flex-shrink-0">
-                      <img src="./assets/img/icons/unicons/chart-success.png" alt="chart success" class="rounded" />
+                  <div class="d-flex align-items-center mb-2 pb-1">
+                    <div class="avatar me-2">
+                      <span class="avatar-initial rounded bg-label-primary"><i class="bx bxs-envelope"></i></span>
                     </div>
-                    <div class="dropdown">
-                      <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                        <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                      </div>
-                    </div>
+                    <h4 class="ms-1 mb-0"><?php echo $allPostCount; ?></h4>
                   </div>
-                  <span class="fw-semibold d-block mb-1">Profit</span>
-                  <h3 class="card-title mb-2">$12,628</h3>
-                  <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
-                    +72.80%</small>
+                  <p class="mb-1">All available post</p>
                 </div>
               </div>
             </div>
-            <div class="col-md-4 col-6 mb-4">
-              <div class="card h-100">
+            <div class="col-sm-6 col-lg-3 mb-4">
+              <div class="card card-border-shadow-warning h-100">
                 <div class="card-body">
-                  <div class="card-title d-flex align-items-start justify-content-between">
-                    <div class="avatar flex-shrink-0">
-                      <img src="./assets/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded" />
+                  <div class="d-flex align-items-center mb-2 pb-1">
+                    <div class="avatar me-2">
+                      <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-error"></i></span>
                     </div>
-                    <div class="dropdown">
-                      <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                        <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                      </div>
-                    </div>
+                    <h4 class="ms-1 mb-0"><?php echo $allDraftPostCount; ?></h4>
                   </div>
-                  <span>Sales</span>
-                  <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-                  <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
-                    +28.42%</small>
+                  <p class="mb-1">Pending post</p>
+                  
                 </div>
               </div>
             </div>
-            <div class="col-md-4 col-6 mb-4">
-              <div class="card h-100">
+            <div class="col-sm-6 col-lg-3 mb-4">
+              <div class="card card-border-shadow-success h-100">
                 <div class="card-body">
-                  <div class="card-title d-flex align-items-start justify-content-between">
-                    <div class="avatar flex-shrink-0">
-                      <img src="./assets/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded" />
+                  <div class="d-flex align-items-center mb-2 pb-1">
+                    <div class="avatar me-2">
+                      <span class="avatar-initial rounded bg-label-success"><i class="bx bx-envelope-open"></i></span>
                     </div>
-                    <div class="dropdown">
-                      <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                        <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                      </div>
-                    </div>
+                    <h4 class="ms-1 mb-0"><?php echo $allPublishedPostCount; ?></h4>
                   </div>
-                  <span>Sales</span>
-                  <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-                  <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i>
-                    +28.42%</small>
+                  <p class="mb-1">Active post </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3 mb-4">
+              <div class="card card-border-shadow-info h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-2 pb-1">
+                    <div class="avatar me-2">
+                      <span class="avatar-initial rounded bg-label-info"><i class="bx bx-time-five"></i></span>
+                    </div>
+                    <h4 class="ms-1 mb-0"><?php echo $allCategoryCount; ?></h4>
+                  </div>
+                  <p class="mb-1">All category</p>
                 </div>
               </div>
             </div>

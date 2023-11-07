@@ -1,12 +1,9 @@
 <?php
-$realPath = dirname(__FILE__);
 include_once './layouts/head.php';
-include_once $realPath . './classes/Post.php';
-include_once $realPath . './../classes/Tag.php';
 $tagObj = new Tag();
 $postObj = new Post();
 $all_tags = $tagObj->getAllTags(4);
-$all_posts = $postObj->getAllPost(4);
+$all_posts = $postObj->getAllPost($pagination);
 $featured_posts = $postObj->getAllFeaturedPost(2);
 ?>
 
@@ -28,19 +25,21 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                             <ul class="list-inline d-inline-block tags">
                                 <!-- tag -->
                                 <?php foreach ($all_tags as $tag): ?>
-                                    <li class="list-inline-item"><a href="#">#
+                                    <li class="list-inline-item"><a href="tag-post.php?name=<?php echo $tag['name']; ?>">#
                                             <?php echo $tag['name']; ?>
                                         </a></li>
                                 <?php endforeach; ?>
-
+                                <!-- end tag -->
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Featured Post -->
             <div class="loop-grid mb-30">
                 <div class="row">
                     <div class="col-lg-8 mb-30">
+                        <!-- 1st Featured post  -->
                         <div
                             class="carausel-post-1 hover-up border-radius-10 overflow-hidden transition-normal position-relative wow fadeInUp animated">
                             <div class="arrow-cover"></div>
@@ -63,7 +62,7 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                             </h3>
                                             <div class="entry-meta meta-1 font-small text-white mt-10 pr-5 pl-5">
                                                 <span class="post-on">20 minutes ago</span>
-                                                <span class="hit-count has-dot">23k Views</span>
+                                                <span class="hit-count has-dot">150 Views</span>
                                             </div>
                                         </div>
                                     </div>
@@ -72,13 +71,14 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                             </div>
                         </div>
                     </div>
-                    <!--Start Featured post -->
-
+                    <!-- End 1st Featured post -->
+                    <!--2nd Featured post -->
                     <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="0.2s">
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative"
                                 style="background-image: url(admin/uploads/post-img/<?php echo $featured_posts[1]['image']; ?>)">
-                                <a class="img-link" href="single.html"></a>
+                                <a class="img-link"
+                                    href="post-details.php?slug=<?php echo $featured_posts[1]['slug']; ?>"></a>
 
                             </div>
                             <div class="post-content p-30">
@@ -91,7 +91,7 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                 </div>
                                 <div class="d-flex post-card-content">
                                     <h5 class="post-title mb-20 font-weight-900">
-                                        <a href="single.html">
+                                        <a href="post-details.php?slug=<?php echo $featured_posts[0]['slug']; ?>">
                                             <?php echo $featured_posts[1]['title']; ?>
                                         </a>
                                     </h5>
@@ -99,22 +99,23 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                         <span class="post-on">
                                             <?php echo date('d F', strtotime($featured_posts[1]['created_at'])); ?>
                                         </span>
-                                        <span class="time-reading has-dot">12 mins read</span>
-                                        <span class="post-by has-dot">23k views</span>
+                                        <span class="time-reading has-dot">2 mins read</span>
+                                        <span class="post-by has-dot">100 views</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </article>
-
-                    <!-- End Featured post -->
+                    <!-- End 2nd Featured post -->
                 </div>
             </div>
+            <!-- End Featured Post -->
         </div>
         <div class="bg-grey pt-50 pb-50">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
+                        <!-- Recent Post -->
                         <div class="post-module-3">
                             <div class="widget-header-1 position-relative mb-30">
                                 <h5 class="mt-5 mb-30">Latest posts</h5>
@@ -156,8 +157,8 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                                             <span class="post-on">
                                                                 <?php echo date('d F', strtotime($post['created_at'])); ?>
                                                             </span>
-                                                            <span class="time-reading has-dot">11 mins read</span>
-                                                            <span class="post-by has-dot">3k views</span>
+                                                            <span class="time-reading has-dot">1 mins read</span>
+                                                            <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -173,6 +174,7 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
 
                             </div>
                         </div>
+                        <!-- End Recent Post -->
                         <!-- Start Pagination -->
                         <?php if (!empty($all_posts['data'])): ?>
                             <div class="pagination-area mb-30 wow fadeInUp animated">

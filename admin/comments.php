@@ -1,15 +1,22 @@
 <?php
-$title = "All Posts";
+$title = "Comments";
 include_once './layouts/head.php';
 include_once './layouts/custom-css.php';
 
-$post = new Post();
-$posts = $post->getAllPostAdmin();
+$commentObj = new Comment();
+$comments = $commentObj->getAllCommentsAdmin();
 if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-  $result = $post->deletePost($id);
+ $id = $_GET['id'];
+ $commentObj->deleteComment($id);
+}
+if (isset($_GET['active'])) {
+ $commentObj->activateComment($_GET['active']);
+}
+if (isset($_GET['deactive'])) {
+ $commentObj->deactivateComment($_GET['deactive']);
 }
 ?>
+
 </head>
 
 <body>
@@ -44,59 +51,52 @@ if (isset($_GET['id'])) {
                   <div class="card-header px-0 m-0 d-flex justify-content-between">
                     <div class="head-label">
                       <h5 class="card-title mb-0">
-                        List of Posts
+                        List of Comments
                       </h5>
-                    </div>
-                    <div>
-                      <a href="add-post.php"><button type="button" class="btn btn-primary">
-                          Add Post
-                        </button></a>
                     </div>
                   </div>
                   <table id="example" class="table table-striped" style="width: 100%">
                     <thead>
                       <tr>
-                        <th >S/N</th>
-                        <th>Post title</th>
-                        <th>Category</th>
-                        <th>Status</th>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Message</th>
+                        <th>Reply</th>
                         <th class="text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
-                      if ($posts) {
+                      if ($comments) {
                         $i = 1;
-                        while ($row = $posts->fetch(PDO::FETCH_ASSOC)) { ?>
+                        while ($row = $comments->fetch(PDO::FETCH_ASSOC)) { ?>
                           <tr>
                             <td>
                               <?php echo $i++; ?>
                             </td>
                             <td>
-                              <?php echo Helper::textShorten($row['title'], 40) ?>
+                              <?php echo $row['name']; ?>
                             </td>
                             <td>
-                              <?php echo $row['category_name']; ?>
+                              <?php echo Helper::textShorten($row['message'], 20); ?>
                             </td>
                             <td>
-                              <?php
-                              $status = $row['status'];
-                              $badgeClass = ($status == 1) ? 'success' : 'danger';
-                              $badgeText = ($status == 1) ? 'Published' : 'Draft';
-                              ?>
-
-                              <span class="badge rounded-pill bg-<?php echo $badgeClass; ?>">
-                                <?php echo $badgeText; ?>
-                              </span>
+                              <?php echo ($row['reply'])?Helper::textShorten($row['reply'], 20):'no reply'; ?>
                             </td>
                             <td class="text-center">
 
                               <a
-                                class="btn btn-sm btn-outline-info" href="post-details.php?id=<?php echo $row['id']; ?>"><i class=" fs-5 bx bx-glasses"></i></a>
+                                class="btn btn-sm btn-outline-info" href="comment-details.php?id=<?php echo $row['id']; ?>"><i class=" fs-5 bx bx-glasses"></i></a>
+                              <?php if ($row['status'] == 0) : ?>
+                                <a class="btn btn-sm btn-outline-warning " href="?active=<?php echo $row['id']; ?>"><i class="fs-5 bx bx-down-arrow-alt"></i></a>
+                              <?php else : ?>
+                                <a class="btn btn-sm btn-outline-success " href="?deactive=<?php echo $row['id']; ?>"><i class="fs-5 bx bx-up-arrow-alt"></i></a>
+                              <?php endif; ?>
                               <a class="btn btn-sm btn-outline-primary"
-                                href="edit-post.php?id=<?php echo $row['id']; ?>">
+                                href="comment-reply.php?id=<?php echo $row['id']; ?>">
                                 <i class="fs-5 bx bx-edit"></i>
                               </a>
+
                               <a class="btn btn-sm btn-outline-danger btn-delete" href="?id=<?php echo $row['id']; ?>"><i
                                   class="fs-5 bx bx-trash"></i></a>
 
@@ -119,7 +119,7 @@ if (isset($_GET['id'])) {
   </div>
 
   <!-- JavaScript -->
-  <?php
+  <?php 
   include_once './layouts/script.php';
   include_once './layouts/custom-script.php';
   // check for success message 

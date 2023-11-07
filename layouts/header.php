@@ -1,6 +1,4 @@
 <?php
-$realPath = dirname(__FILE__);
-include_once $realPath . './../classes/Category.php';
 $category = new Category();
 $categories = $category->getAllCategories();
 
@@ -16,7 +14,7 @@ $categories = $category->getAllCategories();
       <div class="container">
          <div class="row pt-20 pb-20">
             <div class="col-md-3 col-xs-6">
-               <a href="index.php"><h6 class="fs-3 text-uppercase">Trendy Blog</h6></a>
+               <a href="index.php"><h6 class="fs-3 text-decoration-underline text-dark"><?php echo $setting['logo_text']??'Trendy Blog'; ?></h6></a>
             </div>
             <div class="col-md-9 col-xs-6 text-end header-top-right ">
 
@@ -31,8 +29,8 @@ $categories = $category->getAllCategories();
                      </ul>
 
                   </li>
-                  <li class="list-inline-item"><a href=""><i class="elegant-icon  mr-5"></i>About</a></li>
-                  <li class="list-inline-item"><a href=""><i class="elegant-icon  mr-5"></i>Contact</a></li>
+                  <li class="list-inline-item"><a href="about.php"><i class="elegant-icon  mr-5"></i>About</a></li>
+                  <li class="list-inline-item"><a href="contact.php"><i class="elegant-icon  mr-5"></i>Contact</a></li>
                </ul>
                <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
                <button class="search-icon d-none d-md-inline"><span class="mr-15 text-muted font-small"><i

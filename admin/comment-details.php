@@ -2,14 +2,11 @@
 $title = "Post Details";
 include_once './layouts/head.php';
 
-$postObj = new Post();
-$tagObj = new Tag();
-
+$commentObj = new Comment();
 if ($_GET['id']) {
   $id = $_GET['id'];
-  $post = $postObj->getPostAdmin($id);
-}
-$tags = $tagObj->getAllTagsFromPost($id);
+  $comment = $commentObj->getCommentById($id);
+};
 ?>
 </head>
 
@@ -35,39 +32,30 @@ $tags = $tagObj->getAllTagsFromPost($id);
                 <div class="card mb-4">
                   <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="mb-0">Post Details</h5>
-                    <a href="posts.php" class="btn btn-sm btn-outline-danger">Back</a>
+                    <a href="comments.php" class="btn btn-sm btn-outline-danger">Back</a>
                   </div>
                   <div class="card-body">
-                    <h5>category:
-                      <?php echo $post['category_name']; ?>
-                    </h5>
-                    <h3>title:
-                      <?php echo $post['title']; ?>
-                    </h3>
-                    <p>author:
-                      <?php echo $post['author']; ?>
+                    <p>Name:
+                      <?php echo $comment['name']; ?>
                     </p>
-                    <div class="text-center">
-                      <img src="uploads/post-img/<?php echo $post['image']; ?>" alt="" srcset="" class="img-fluid w-50">
-                    </div>
+                    <p>Email:
+                      <?php echo $comment['email']; ?>
+                    </p>
                     <p>
-                      <?php echo $post['description']; ?>
+                      Message:
+                      <?php echo $comment['message']; ?>
                     </p>
-                    <p>status:
-                      <?php echo $post['status'] == 1 ? 'Published' : 'Draft'; ?>
+                    <p>
+                      Reply:
+                      <?php echo $comment['reply']; ?>
                     </p>
-                    <p>featured:
-                      <?php echo $post['is_featured'] == 1 ? 'Yes' : 'No'; ?>
+                    <p>
+                      Date:
+                      <?php echo $comment['created_at']; ?>
                     </p>
-                    <div>
-                      tags:
-                      <?php foreach ($tags as $tag):
-                        ; ?>
-                        <p class="fw-bold d-inline-block">#
-                          <?php echo $tag['name']; ?>
-                        </p>
-                      <?php endforeach; ?>
-                    </div>
+                    <p>Status:
+                      <?php echo $comment['status'] == 1 ? 'Active' : 'Inactive'; ?>
+                    </p>
                   </div>
                 </div>
               </div>
