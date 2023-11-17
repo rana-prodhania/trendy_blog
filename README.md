@@ -9,7 +9,7 @@ My PHP personal blog site, It offers the following common functionalities:
 - Search functionality
 - feature and popular post
 - Admin panel
-- more ...
+- many more ...
 
 ## Screenshots
 ##### Project ERD Diagram:
