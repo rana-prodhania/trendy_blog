@@ -88,4 +88,4 @@ $allCategoryCount = $dashboard->getAllCategoryCount();
 </div>
 
 <!-- JavaScript -->
-<?php include_once './layouts /script.php'; ?>
+<?php include_once './layouts/script.php'; ?>

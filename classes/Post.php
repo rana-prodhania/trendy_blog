@@ -13,7 +13,6 @@ class Post
   {
     $this->db = new Database();
     $this->helper = new Helper();
-
   }
   // Add Post
   public function addPost($data, $files)
@@ -185,7 +184,7 @@ class Post
       $totalPage = ceil($totalPost / $limit);
       $start = ($page - 1) * $limit;
 
-      $query = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name
+      $query = "SELECT posts.title, posts.views, posts.slug, posts.image, posts.created_at, categories.name AS category_name
               FROM posts 
               INNER JOIN categories ON posts.category_id = categories.id 
               
@@ -220,7 +219,7 @@ class Post
       $totalPage = ceil($totalPost / $limit);
       $start = ($page - 1) * $limit;
 
-      $query = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name
+      $query = "SELECT posts.title, posts.slug, posts.views, posts.image, posts.created_at, categories.name AS category_name
                 FROM posts 
                 INNER JOIN post_tags ON posts.id = post_tags.post_id 
                 INNER JOIN tags ON post_tags.tag_id = tags.id 
@@ -237,7 +236,7 @@ class Post
       return $e->getMessage();
     }
   }
-  
+
 
 
 
@@ -258,7 +257,7 @@ class Post
       $totalPage = ceil($totalPost / $limit);
       $start = ($page - 1) * $limit;
 
-      $query = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name, categories.slug as category_slug 
+      $query = "SELECT posts.title, posts.views, posts.slug, posts.image, posts.created_at, categories.name AS category_name, categories.slug as category_slug 
               FROM posts 
               INNER JOIN categories ON posts.category_id = categories.id 
               WHERE posts.status = 1 
@@ -269,7 +268,6 @@ class Post
       $posts = $this->db->query($query, $params)->fetchAll(PDO::FETCH_ASSOC);
 
       return ['totalPage' => $totalPage, 'data' => $posts, 'page' => $page];
-
     } catch (PDOException $e) {
       return $e->getMessage();
     }
@@ -293,7 +291,7 @@ class Post
 
       $start = ($page - 1) * $limit;
 
-      $selectQuery = "SELECT posts.title, posts.slug, posts.image, posts.created_at, categories.name AS category_name,  categories.slug as category_slug
+      $selectQuery = "SELECT posts.*, categories.name AS category_name,  categories.slug as category_slug
             FROM posts
             INNER JOIN categories ON posts.category_id = categories.id
             
@@ -312,7 +310,7 @@ class Post
   public function getAllFeaturedPost($limit = 1)
   {
     try {
-      $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at, categories.name as category_name, categories.slug as category_slug FROM posts
+      $selectQuery = "SELECT posts.image, posts.title,posts.views, posts.slug, posts.created_at, categories.name as category_name, categories.slug as category_slug FROM posts
               INNER JOIN categories ON posts.category_id = categories.id
               WHERE posts.status = 1 AND posts.is_featured = 1
               ORDER BY updated_at DESC LIMIT $limit";
@@ -329,10 +327,10 @@ class Post
   public function getAllPopularPost($limit = 3)
   {
     try {
-      $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at FROM posts
+      $selectQuery = "SELECT posts.image, posts.title,posts.views, posts.slug, posts.created_at FROM posts
               
               WHERE posts.status = 1
-              ORDER BY RAND() LIMIT $limit";
+              ORDER BY views DESC LIMIT $limit";
 
       $posts = $this->db->query($selectQuery)->fetchAll(PDO::FETCH_ASSOC);
       if (empty($posts)) {
@@ -345,7 +343,7 @@ class Post
   }
 
   // Related Post by category
-  public function getRelatedPosts($category_id,$currentPostSlug,$limit = 3)
+  public function getRelatedPosts($category_id, $currentPostSlug, $limit = 3)
   {
     try {
       $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at, categories.name as category_name FROM posts
@@ -403,6 +401,24 @@ class Post
       }
     }
   }
+  // Increase View Count
+  public function increaseViewCount($slug)
+  {
+    try {
+      $sessionKey = 'viewed_post_' . $slug;
+      
+      if (!isset($_SESSION[$sessionKey] )) {
+        $query = "UPDATE posts SET views = views + 1 WHERE slug = ?";
+        $result = $this->db->query($query, [$slug]);
+        if (!$result) {
+          throw new Exception("Failed to increase view count!");
+        }
+        $_SESSION[$sessionKey] = true;
+      }
+    } catch (Exception $e) {
+      return $e->getMessage();
+    }
+  }
   // Delete Old Post Tags
   private function deleteOldPostTags($id)
   {
@@ -411,7 +427,6 @@ class Post
     if (!$result) {
       throw new Exception("Deleting old post tags failed!");
     }
-
   }
 
   // Validate Field

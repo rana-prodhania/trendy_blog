@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once './layouts/head.php';
 $postObj = new Post();
 $tagObj = new Tag();
@@ -6,6 +7,7 @@ $commentObj = new Comment();
 
 $slug = $_GET['slug'] ?? '';
 $post = $postObj->getPost($slug);
+$addView = $postObj->increaseViewCount($slug);
 $relatedPosts = $postObj->getRelatedPosts($post['category_id'], $post['slug'], $setting['rel_posts_limit']);
 
 $postID = $post['id'] ?? '';
@@ -15,6 +17,7 @@ $comments = $commentObj->getAllComments($postID);
 if (isset($_POST['submit']) && !empty($slug)) {
    $result = $commentObj->addComment($slug, $_POST);
 }
+echo var_dump($_SESSION);
 ?>
 
 <body class="theme-mode">

@@ -100,7 +100,7 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                             <?php echo date('d F', strtotime($featured_posts[1]['created_at'])); ?>
                                         </span>
                                         <span class="time-reading has-dot">2 mins read</span>
-                                        <span class="post-by has-dot">100 views</span>
+                                        <span class="post-by has-dot"><?php echo $featured_posts[1]['views']; ?> views</span>
                                     </div>
                                 </div>
                             </div>
@@ -157,8 +157,8 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                                             <span class="post-on">
                                                                 <?php echo date('d F', strtotime($post['created_at'])); ?>
                                                             </span>
-                                                            <span class="time-reading has-dot">1 mins read</span>
-                                                            <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
+                                                            <span class="time-reading has-dot"><?php echo Helper::readingTime($post['title'], $post['description']) ?> mins read</span>
+                                                            <span class="post-by has-dot"><?php echo $post['views']; ?> views</span>
                                                         </div>
                                                     </div>
                                                 </div>

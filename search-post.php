@@ -66,7 +66,7 @@ if (isset($_GET['search'])) {
                 <?php echo date('d F', strtotime($post['created_at'])); ?>
                </span>
                <span class="time-reading has-dot">1 mins read</span>
-               <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
+               <span class="post-by has-dot"><?php echo $post['views']; ?> views</span>
               </div>
              </div>
             </div>

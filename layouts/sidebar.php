@@ -23,7 +23,7 @@ $popular_posts = $postObj->getAllPopularPost($setting['pop_per_page']);
           <span class="post-on">
            <?php echo date('d F', strtotime($post['created_at'])); ?>
           </span>
-          <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
+          <span class="post-by has-dot"><?php echo $post['views']; ?> views</span>
          </div>
         </div>
         <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">

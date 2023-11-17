@@ -5,18 +5,18 @@ $categories = $category->getAllCategories();
 ?>
 
 <!-- Start Preloader -->
-<!-- <div class="preloader text-center">
+<div class="preloader text-center">
  <div class="circle"></div>
-</div> -->
+</div>
 <!-- Start Header -->
 <header class="main-header header-style-1 font-heading">
    <div class="header-top">
       <div class="container">
          <div class="row pt-20 pb-20">
-            <div class="col-md-3 col-xs-6">
+            <div class="col-md-3 col-6">
                <a href="index.php"><h6 class="fs-3 text-decoration-underline text-dark"><?php echo $setting['logo_text']??'Trendy Blog'; ?></h6></a>
             </div>
-            <div class="col-md-9 col-xs-6 text-end header-top-right ">
+            <div class="col-md-9 col-6 text-end header-top-right ">
 
                <ul class="list-inline nav-topbar d-none d-md-inline">
                   <li class="list-inline-item"><a href="index.php"><i class="elegant-icon icon_home mr-5"></i>Home</a>
