@@ -17,7 +17,6 @@ $comments = $commentObj->getAllComments($postID);
 if (isset($_POST['submit']) && !empty($slug)) {
    $result = $commentObj->addComment($slug, $_POST);
 }
-echo var_dump($_SESSION);
 ?>
 
 <body class="theme-mode">

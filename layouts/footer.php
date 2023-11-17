@@ -2,7 +2,7 @@
 <footer class="pb-20">
     <div class="container">
         <div class="footer-copy-right pt-30 mt-20 wow fadeInUp animated">
-            <p class="float-md-start font-small text-muted">© 2023,
+            <p class="float-md-start font-small text-muted">© <?php echo date('Y'); ?>,
                 <?php echo $setting['site_title']??'Trendy Blog'; ?>
             </p>
             <p class="float-md-end font-small text-muted">
