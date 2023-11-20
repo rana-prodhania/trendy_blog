@@ -7,7 +7,7 @@ class SiteSetting{
  private $db;
  private $helper;
 
- // public $error = [];
+ public $error = [];
 
  public $success = []; 
 

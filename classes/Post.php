@@ -346,7 +346,7 @@ class Post
   public function getRelatedPosts($category_id, $currentPostSlug, $limit = 3)
   {
     try {
-      $selectQuery = "SELECT posts.image, posts.title, posts.slug, posts.created_at, categories.name as category_name FROM posts
+      $selectQuery = "SELECT posts.image, posts.views, posts.title, posts.slug, posts.created_at, categories.name as category_name FROM posts
                 INNER JOIN categories ON posts.category_id = categories.id
                 WHERE posts.status = 1 AND posts.category_id = ? AND posts.slug != ?
                 ORDER BY RAND() LIMIT $limit";

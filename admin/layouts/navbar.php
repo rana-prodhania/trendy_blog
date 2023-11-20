@@ -1,9 +1,8 @@
-<?php 
+<?php
 $profileObj = new Profile();
 $profile = $profileObj->getProfile();
 ?>
-<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-    id="layout-navbar">
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
             <i class="bx bx-menu bx-sm"></i>
@@ -15,8 +14,7 @@ $profile = $profileObj->getProfile();
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-search fs-4 lh-0"></i>
-                <input type="text" class="form-control border-0 shadow-none" placeholder="Search..."
-                    aria-label="Search..." />
+                <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
             </div>
         </div>
         <!-- /Search -->
@@ -26,7 +24,7 @@ $profile = $profileObj->getProfile();
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="profile.php" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="uploads/profile/<?php echo $profile['avatar']? $profile['avatar'] : 'default.png'; ?>" alt="" class="w-px-40 h-auto rounded-circle" />
+                        <img src="uploads/profile/<?php echo $profile['avatar'] ? $profile['avatar'] : 'default.png'; ?>" alt="" class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -35,7 +33,7 @@ $profile = $profileObj->getProfile();
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
-                                        <img src="uploads/profile/<?php echo $profile['avatar']? $profile['avatar'] : 'default.png'; ?>" alt class="w-px-40 h-auto rounded-circle" />
+                                        <img src="uploads/profile/<?php echo $profile['avatar'] ? $profile['avatar'] : 'default.png'; ?>" alt class="w-px-40 h-auto rounded-circle" />
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">

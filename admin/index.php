@@ -51,7 +51,7 @@ if(isset($_SESSION['id'])) {
             <!-- Logo -->
             <div class="app-brand justify-content-center my-4">
               <a href="index.html" class="app-brand-link gap-2">
-                <span class="app-brand-text demo text-body fw-bold text-capitalize">Trendy Blog</span>
+                <span class="app-brand-text demo text-body fw-bold text-capitalize">Admin Login</span>
               </a>
             </div>
 

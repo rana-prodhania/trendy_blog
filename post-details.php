@@ -126,7 +126,7 @@ if (isset($_POST['submit']) && !empty($slug)) {
                                  <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
                                     <span class="post-on"><?php echo date('d F', strtotime($relatedPost['created_at'])); ?></span>
                                     <span class="time-reading has-dot">1 mins read</span>
-                                    <span class="post-by has-dot"><?php echo random_int(0, 100) ?> views</span>
+                                    <span class="post-by has-dot"><?php echo $relatedPost['views'] ?> views</span>
                                  </div>
                               </div>
                            </div>

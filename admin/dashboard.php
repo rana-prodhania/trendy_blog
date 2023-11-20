@@ -7,8 +7,11 @@ $allDraftPostCount = $dashboard->getAllDraftPostCount();
 $allPublishedPostCount = $dashboard->getAllPublishedPostCount();
 $allCategoryCount = $dashboard->getAllCategoryCount(); 
 ?>
+</head>
+<body>
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
+  
   <div class="layout-container">
     <!-- Menu or Sidebar -->
     <?php include_once './layouts/sidebar.php'; ?>
@@ -89,3 +92,8 @@ $allCategoryCount = $dashboard->getAllCategoryCount();
 
 <!-- JavaScript -->
 <?php include_once './layouts/script.php'; ?>
+
+
+</body>
+
+</html>

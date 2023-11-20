@@ -34,6 +34,9 @@ spl_autoload_register(function ($className) {
   <link rel="stylesheet" href="./assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
   <link rel="stylesheet" href="./assets/css/demo.css" />
 
+  <!-- Vendors CSS -->
+  
+
   <!-- Helpers -->
   <script src="./assets/vendor/js/helpers.js"></script>
   

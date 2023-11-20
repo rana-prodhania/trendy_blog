@@ -1,12 +1,14 @@
 <?php
 // Determine the current page
 $currentPage = basename($_SERVER['PHP_SELF']);
+$siteSetting = new SiteSetting();
+$setting = $siteSetting->getSiteSetting();
 ?>
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="dashboard.php" class="app-brand-link">
-            <span class="app-brand-text text-capitalize demo menu-text fw-bolder ms-2">Trendy Blog</span>
+            <span class="app-brand-text text-capitalize demo menu-text fw-bolder ms-2"><?php echo $setting['logo_text']??'Trendy Blog'; ?></span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
