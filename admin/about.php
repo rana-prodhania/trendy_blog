@@ -10,7 +10,6 @@ if (isset($_POST['submit'])) {
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 </head>
-
 <body>
  <!-- Layout wrapper -->
  <div class="layout-wrapper layout-content-navbar">
