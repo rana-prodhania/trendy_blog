@@ -61,8 +61,8 @@ $featured_posts = $postObj->getAllFeaturedPost(2);
                                                 </a>
                                             </h3>
                                             <div class="entry-meta meta-1 font-small text-white mt-10 pr-5 pl-5">
-                                                <span class="post-on">20 minutes ago</span>
-                                                <span class="hit-count has-dot">150 Views</span>
+                                                <span class="post-on"><?php echo date('d F', strtotime($featured_posts[0]['created_at'])); ?></span>
+                                                <span class="hit-count has-dot"><?php echo $featured_posts[0]['views']; ?> Views</span>
                                             </div>
                                         </div>
                                     </div>
