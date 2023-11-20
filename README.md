@@ -1,4 +1,4 @@
-# Project Trendy Blog
+# Project Trendy News
 My PHP personal blog site, It offers the following common functionalities:
 
 - Posting articles
