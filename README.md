@@ -1,4 +1,4 @@
-# Project Trendy News
+# Project Trendy News - PHP with OOP and PDO
 My PHP personal blog site, It offers the following common functionalities:
 
 - Posting articles
